@@ -6,3 +6,10 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+**/allure-results/
+/allure-results/
+**/build/allure-results/
+**/allure-report/
+/allure-report/
+**/target/allure-results/
+**/target/site/allure-maven-plugin/
