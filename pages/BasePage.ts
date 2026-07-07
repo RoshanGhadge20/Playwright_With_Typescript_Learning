@@ -18,7 +18,7 @@ export abstract class BasePage {
 
     async fill(locator: Locator, value: string) {
         await locator.waitFor({ state: 'visible', timeout: 6000 });
-        await locator.fill(value);
+        await locator.fill(value.toString());
     }
 
 }
