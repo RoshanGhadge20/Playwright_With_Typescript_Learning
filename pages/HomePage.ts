@@ -8,6 +8,16 @@ export class HomePage extends BasePage {
     private readonly nameField: Locator;
     private readonly emailField: Locator;
     private readonly phoneField: Locator;
+    private readonly addressField: Locator;
+    private readonly maleRadioButton: Locator;
+    private readonly sundayDay: Locator;
+    private readonly countryDropdown: Locator;
+    private readonly countryDropdownOptions: Locator;
+    private readonly colorsField: Locator;
+    private readonly colorFieldOptions: Locator;
+    private readonly sortedListField: Locator;
+    private readonly sortedListFieldOptions: Locator;
+
 
     constructor(page: Page) {
         super(page);
@@ -16,6 +26,16 @@ export class HomePage extends BasePage {
         this.nameField = this.page.getByPlaceholder("Enter Name");
         this.emailField = this.page.getByPlaceholder("Enter Email");
         this.phoneField = this.page.getByPlaceholder("Enter Phone");
+        this.addressField = this.page.locator("textarea#textarea");
+        this.maleRadioButton = this.page.getByRole('radio', { name: 'male' }).first();
+        this.sundayDay = this.page.getByRole('checkbox', { name: 'Sunday' }).first();
+        this.countryDropdown = this.page.locator("select#country");
+        this.countryDropdownOptions = this.page.locator("select#country option");
+        this.colorsField = this.page.locator("select#colors");
+        this.colorFieldOptions = this.page.locator("select#colors option");
+        this.sortedListField = this.page.locator("select#animals");
+        this.sortedListFieldOptions = this.page.locator("select#animals option");
+
     }
 
 
@@ -38,11 +58,38 @@ export class HomePage extends BasePage {
     }
 
 
-    async fillBasicDetails(name: string, email: string, phoneNumber: bigint) {
+    async fillBasicDetails(name: string, email: string, phoneNumber: bigint, address: string) {
         await test.step(`Started to fill the basic details into form`, async () => {
             await this.fill(this.nameField, name.trim());
             await this.fill(this.emailField, email.trim());
             await this.fill(this.phoneField, phoneNumber.toString());
+            await this.fill(this.addressField, address);
+            await this.maleRadioButton.click();
+            await this.sundayDay.click();
+            const countryList = (await this.countryDropdownOptions.allTextContents())
+                .map(option => option.trim());
+            console.log(`All dropdown options are the - ${countryList}`);
+            if (countryList.includes("India")) {
+                await this.countryDropdown.selectOption({ value: 'india' });
+                console.log("India country is selected from the dropdown");
+            }
+            else {
+                console.log(`India country is not there into the dropdown options`)
+            }
+
+            const colorsList = (await this.colorFieldOptions.allTextContents()).map(color => color.trim());
+            console.log(`All colour options are the - ${colorsList}`);
+            if (colorsList.includes("Red")) {
+                await this.colorsField.selectOption(['Red', 'Blue', 'Yellow']);
+            }
+            else {
+                console.log("Colors are not present");
+            }
+
+            const originalList: string[] = (await this.sortedListField.allTextContents()).map(option => option.trim());
+            const newSortedList: string[] = originalList.sort();
+            await expect(originalList).toEqual(newSortedList);
+            console.log("Now Original list and sorted list both are equals");
         });
     }
 }

@@ -9,5 +9,5 @@ test("Verifying the page section title of the", async ({ homePage }) => {
 
 test("Fill Basic details into Data entry form", async ({ homePage }) => {
     await homePage.navigateToURL();
-    await homePage.fillBasicDetails("Roshan Ghadge", "roshanghadge20@gmail.com", 8767002000n);
+    await homePage.fillBasicDetails("Roshan Ghadge", "roshanghadge20@gmail.com", 8767002000n, "Nerul Navi Mumbai");
 });
