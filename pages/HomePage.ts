@@ -64,6 +64,9 @@ export class HomePage extends BasePage {
             await this.fill(this.emailField, email.trim());
             await this.fill(this.phoneField, phoneNumber.toString());
             await this.fill(this.addressField, address);
+        });
+
+        await test.step(`selcting the other details`, async () => {
             await this.maleRadioButton.click();
             await this.sundayDay.click();
             const countryList = (await this.countryDropdownOptions.allTextContents())
@@ -76,7 +79,9 @@ export class HomePage extends BasePage {
             else {
                 console.log(`India country is not there into the dropdown options`)
             }
+        });
 
+        await test.step("selecting the color list from the dropdown", async () => {
             const colorsList = (await this.colorFieldOptions.allTextContents()).map(color => color.trim());
             console.log(`All colour options are the - ${colorsList}`);
             if (colorsList.includes("Red")) {
@@ -85,7 +90,9 @@ export class HomePage extends BasePage {
             else {
                 console.log("Colors are not present");
             }
+        });
 
+        await test.step("Comparing the two lists", async () => {
             const originalList: string[] = (await this.sortedListField.allTextContents()).map(option => option.trim());
             const newSortedList: string[] = originalList.sort();
             await expect(originalList).toEqual(newSortedList);
