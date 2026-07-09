@@ -13,3 +13,4 @@ node_modules/
 /allure-report/
 **/target/allure-results/
 **/target/site/allure-maven-plugin/
+.env

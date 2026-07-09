@@ -1,5 +1,7 @@
 import { Page, test, expect, Locator } from '@playwright/test'
 import { BasePage } from './BasePage';
+import { env } from '../config/global-setup';
+
 
 export class LoginPage extends BasePage {
 
@@ -21,7 +23,7 @@ export class LoginPage extends BasePage {
 
     async navigateToURL() {
         await test.step("Navigating to the URL", async ({ }) => {
-            await this.goto("https://practicetestautomation.com/practice-test-login/");
+            await this.goto(env.baseurl);
         });
     }
 
