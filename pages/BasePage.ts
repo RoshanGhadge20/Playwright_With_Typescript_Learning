@@ -21,4 +21,5 @@ export abstract class BasePage {
         await locator.fill(value.toString());
     }
 
+
 }
