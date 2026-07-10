@@ -11,3 +11,13 @@ test("Fill Basic details into Data entry form", async ({ homePage }) => {
     await homePage.navigateToURL();
     await homePage.fillBasicDetails("Roshan Ghadge", "roshanghadge20@gmail.com", 8767002000n, "Nerul Navi Mumbai");
 });
+
+test("Working with upload file details section", async ({ homePage }) => {
+    await homePage.navigateToURL();
+    await homePage.uploadSingleFile("test-data/SampleTest.pdf");
+});
+
+test("Working with upload multiple details section", async ({ homePage }) => {
+    await homePage.navigateToURL();
+    await homePage.uploadMultipleFile("test-data/SampleTest.pdf");
+})

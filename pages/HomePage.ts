@@ -17,6 +17,8 @@ export class HomePage extends BasePage {
     private readonly colorFieldOptions: Locator;
     private readonly sortedListField: Locator;
     private readonly sortedListFieldOptions: Locator;
+    private readonly uploadSingleFileSection: Locator;
+    private readonly uploadMultipleFileSection: Locator;
 
 
     constructor(page: Page) {
@@ -35,6 +37,8 @@ export class HomePage extends BasePage {
         this.colorFieldOptions = this.page.locator("select#colors option");
         this.sortedListField = this.page.locator("select#animals");
         this.sortedListFieldOptions = this.page.locator("select#animals option");
+        this.uploadSingleFileSection = this.page.locator("input#singleFileInput");
+        this.uploadMultipleFileSection = this.page.locator("input#multipleFilesInput");
 
     }
 
@@ -98,5 +102,13 @@ export class HomePage extends BasePage {
             await expect(originalList).toEqual(newSortedList);
             console.log("Now Original list and sorted list both are equals");
         });
+    }
+
+    async uploadSingleFile(fileToUpload: string) {
+        await this.uploadSingleFileSection.setInputFiles(fileToUpload);
+    }
+
+    async uploadMultipleFile(fileToUpload: string) {
+        await this.uploadMultipleFileSection.setInputFiles([fileToUpload, fileToUpload, fileToUpload]);
     }
 }
