@@ -19,7 +19,13 @@ export class HomePage extends BasePage {
     private readonly sortedListFieldOptions: Locator;
     private readonly uploadSingleFileSection: Locator;
     private readonly uploadMultipleFileSection: Locator;
-
+    private readonly datePicker1Field: Locator;
+    private readonly datePicker2Field: Locator;
+    private readonly datePickerUI: Locator;
+    private readonly datePickerMonthSelection: Locator;
+    private readonly datePickerYearSelection: Locator;
+    private readonly datePicker3SubmitButton: Locator;
+    private readonly datePicker3ValidationMessage: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -40,6 +46,18 @@ export class HomePage extends BasePage {
         this.uploadSingleFileSection = this.page.locator("input#singleFileInput");
         this.uploadMultipleFileSection = this.page.locator("input#multipleFilesInput");
 
+        // Date picker UI 1 element field
+        this.datePicker1Field = this.page.locator("input#datepicker");
+
+        // Date Picker 2 UI elements
+        this.datePicker2Field = this.page.locator("input#txtDate");
+        this.datePickerUI = this.page.locator("div#ui-datepicker-div");
+        this.datePickerMonthSelection = this.page.locator("select.ui-datepicker-month");
+        this.datePickerYearSelection = this.page.locator("select.ui-datepicker-year");
+
+        // Date Picker 3 UI elements
+        this.datePicker3SubmitButton = this.page.locator("button.submit-btn");
+        this.datePicker3ValidationMessage = this.page.locator("div#result");
     }
 
 
@@ -104,6 +122,23 @@ export class HomePage extends BasePage {
         });
     }
 
+    async handlingDatePicker1(date: Date) {
+        await this.fill(this.datePicker1Field, date.toString());
+        console.log(`selected date from the datepicker 1 is ${date}`);
+    }
+
+    async handlingDatePicker2(month: string, year: string, date: number) {
+        await this.datePicker2Field.click();
+        await this.datePickerUI.waitFor({ state: 'visible', timeout: 6000 });
+        await this.datePickerMonthSelection.selectOption({ label: month });
+        await this.datePickerYearSelection.selectOption({ value: year });
+        await this.page.locator(`.ui-datepicker-calendar tbody td a:text-is("${date}")`).click();
+        console.log("Date has been selected");
+    }
+
+
+
+
     async uploadSingleFile(fileToUpload: string) {
         await this.uploadSingleFileSection.setInputFiles(fileToUpload);
     }
@@ -111,4 +146,6 @@ export class HomePage extends BasePage {
     async uploadMultipleFile(fileToUpload: string) {
         await this.uploadMultipleFileSection.setInputFiles([fileToUpload, fileToUpload, fileToUpload]);
     }
+
+
 }

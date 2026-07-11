@@ -12,6 +12,16 @@ test("Fill Basic details into Data entry form", async ({ homePage }) => {
     await homePage.fillBasicDetails("Roshan Ghadge", "roshanghadge20@gmail.com", 8767002000n, "Nerul Navi Mumbai");
 });
 
+test("Working with date picker 1", async ({ homePage }) => {
+    await homePage.navigateToURL();
+    await homePage.handlingDatePicker1(new Date("2026-04-01"));
+})
+
+test("Working with date picker 2", async ({ homePage }) => {
+    await homePage.navigateToURL();
+    await homePage.handlingDatePicker2("Jan", "2024", 4)
+});
+
 test("Working with upload file details section", async ({ homePage }) => {
     await homePage.navigateToURL();
     await homePage.uploadSingleFile("test-data/SampleTest.pdf");
