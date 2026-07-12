@@ -22,6 +22,16 @@ test("Working with date picker 2", async ({ homePage }) => {
     await homePage.handlingDatePicker2("Jan", "2024", 4)
 });
 
+test("Checking validation message for date picker 3", async ({ homePage }) => {
+    await homePage.navigateToURL();
+    await homePage.checkingValidationMessageForDateField3();
+});
+
+test("Checking date range in date picker 3", async ({ homePage }) => {
+    await homePage.navigateToURL();
+    await homePage.checkRangeBetweenDates("2025-02-02", "2026-05-02");
+});
+
 test("Working with upload file details section", async ({ homePage }) => {
     await homePage.navigateToURL();
     await homePage.uploadSingleFile("test-data/SampleTest.pdf");
