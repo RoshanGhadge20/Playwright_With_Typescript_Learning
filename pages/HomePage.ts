@@ -26,6 +26,9 @@ export class HomePage extends BasePage {
     private readonly datePickerYearSelection: Locator;
     private readonly datePicker3SubmitButton: Locator;
     private readonly datePicker3ValidationMessage: Locator;
+    private readonly datePicker3StartDate: Locator
+    private readonly datePicker3EndDate: Locator
+    private readonly dateRangeMessage: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -58,6 +61,9 @@ export class HomePage extends BasePage {
         // Date Picker 3 UI elements
         this.datePicker3SubmitButton = this.page.locator("button.submit-btn");
         this.datePicker3ValidationMessage = this.page.locator("div#result");
+        this.datePicker3StartDate = this.page.locator("input#start-date");
+        this.datePicker3EndDate = this.page.locator("input#end-date")
+        this.dateRangeMessage = this.page.locator("div#result");
     }
 
 
@@ -136,8 +142,25 @@ export class HomePage extends BasePage {
         console.log("Date has been selected");
     }
 
+    async checkingValidationMessageForDateField3() {
+        await this.datePicker3SubmitButton.click();
+        await expect(this.datePicker3ValidationMessage).toBeVisible();
+        console.log("Date Picker Validation Message 3 is visilbe completely");
+    }
 
-
+    async checkRangeBetweenDates(startDate: string, endDate: string) {
+        await this.datePicker3StartDate.fill(startDate.toString());
+        await this.datePicker3EndDate.fill(endDate.toString());
+        await this.datePicker3SubmitButton.click();
+        await expect(this.dateRangeMessage).toBeVisible();
+        let message: string | null = await this.dateRangeMessage.textContent();
+        if (message != null && message.trim() != "") {
+            console.log(`${message}`);
+        }
+        else {
+            console.log(`unable to fetch the date range`);
+        }
+    }
 
     async uploadSingleFile(fileToUpload: string) {
         await this.uploadSingleFileSection.setInputFiles(fileToUpload);
@@ -148,4 +171,4 @@ export class HomePage extends BasePage {
     }
 
 
-}
+}  
