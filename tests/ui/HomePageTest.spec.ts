@@ -41,3 +41,8 @@ test("Working with upload multiple details section", async ({ homePage }) => {
     await homePage.navigateToURL();
     await homePage.uploadMultipleFile("test-data/SampleTest.pdf");
 })
+
+test("Working subscribed to section", async ({ homePage }) => {
+    await homePage.navigateToURL();
+    await homePage.handlingSubscribeToSection();
+})
