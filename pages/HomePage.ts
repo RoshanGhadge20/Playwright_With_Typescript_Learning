@@ -30,6 +30,8 @@ export class HomePage extends BasePage {
     private readonly datePicker3EndDate: Locator
     private readonly dateRangeMessage: Locator;
     private readonly subscribeToPostSection: Locator;
+    private readonly staticWebTableHeading: Locator;
+    private readonly staticWebTableData: Locator;
 
 
     constructor(page: Page) {
@@ -67,8 +69,12 @@ export class HomePage extends BasePage {
         this.datePicker3EndDate = this.page.locator("input#end-date")
         this.dateRangeMessage = this.page.locator("div#result");
 
-        // Subscribe to section 
+        // Subscribe to section
         this.subscribeToPostSection = this.page.getByText("Posts (Atom)", { exact: false });
+
+        // Static Web Table details
+        this.staticWebTableHeading = this.page.locator("div.widget-content table[name='BookTable'] tbody tr th");
+        this.staticWebTableData = this.page.locator("div.widget-content table[name='BookTable'] tbody tr td");
     }
 
 
@@ -187,6 +193,21 @@ export class HomePage extends BasePage {
         console.log("Parent page is bringed to to front again");
     }
 
+    async workingWithStaticWebTable() {
+        let tableHeadingCount = await this.staticWebTableHeading.count();
+        let tableDataCount = await this.staticWebTableData.count();
+        for (let i = 0; i < tableDataCount; i++) {
+            let tableHeading = await this.staticWebTableHeading.nth(i % tableHeadingCount).textContent();
+            let tableData = await this.staticWebTableData.nth(i).textContent();
+            console.log(`${tableHeading?.trim()} : ${tableData?.trim()}`);
+            if ((i + 1) % tableHeadingCount === 0) {
+                console.log("====================");
+            }
+        }
+    }
 
 
-}  
+}
+
+
+

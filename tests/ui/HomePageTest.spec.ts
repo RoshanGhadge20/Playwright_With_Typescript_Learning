@@ -46,3 +46,8 @@ test("Working subscribed to section", async ({ homePage }) => {
     await homePage.navigateToURL();
     await homePage.handlingSubscribeToSection();
 })
+
+test("Working with static table", async ({ homePage }) => {
+    await homePage.navigateToURL();
+    await homePage.workingWithStaticWebTable();
+})
