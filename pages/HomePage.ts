@@ -29,6 +29,12 @@ export class HomePage extends BasePage {
     private readonly datePicker3StartDate: Locator
     private readonly datePicker3EndDate: Locator
     private readonly dateRangeMessage: Locator;
+    private readonly subscribeToPostSection: Locator;
+    private readonly staticWebTableHeading: Locator;
+    private readonly staticWebTableData: Locator;
+    private readonly dynamicWebTableHeading: Locator;
+    private readonly dynamicWebTableData: Locator;
+
 
     constructor(page: Page) {
         super(page);
@@ -64,7 +70,19 @@ export class HomePage extends BasePage {
         this.datePicker3StartDate = this.page.locator("input#start-date");
         this.datePicker3EndDate = this.page.locator("input#end-date")
         this.dateRangeMessage = this.page.locator("div#result");
+
+        // Subscribe to section
+        this.subscribeToPostSection = this.page.getByText("Posts (Atom)", { exact: false });
+
+        // Static Web Table details
+        this.staticWebTableHeading = this.page.locator("div.widget-content table[name='BookTable'] tbody tr th");
+        this.staticWebTableData = this.page.locator("div.widget-content table[name='BookTable'] tbody tr td");
+
+        // Dynamic Web Table Handling 
+        this.dynamicWebTableHeading = this.page.locator("table#taskTable thead tr  th");
+        this.dynamicWebTableData = this.page.locator("table#taskTable tbody tr  td");
     }
+
 
 
     async navigateToURL() {
@@ -170,5 +188,46 @@ export class HomePage extends BasePage {
         await this.uploadMultipleFileSection.setInputFiles([fileToUpload, fileToUpload, fileToUpload]);
     }
 
+    async handlingSubscribeToSection() {
+        let parentPage = this.page;
+        const [newPage] = await Promise.all([
+            this.page.context().waitForEvent('page'),
+            this.subscribeToPostSection.click(),
+        ]);
+        await newPage.waitForLoadState('networkidle');
+        await expect(newPage).toHaveURL("https://testautomationpractice.blogspot.com/feeds/posts/default", { timeout: 6000 });
+        await parentPage.bringToFront();
+        console.log("Parent page is bringed to to front again");
+    }
 
-}  
+    async workingWithStaticWebTable() {
+        let tableHeadingCount = await this.staticWebTableHeading.count();
+        let tableDataCount = await this.staticWebTableData.count();
+        for (let i = 0; i < tableDataCount; i++) {
+            let tableHeading = await this.staticWebTableHeading.nth(i % tableHeadingCount).textContent();
+            let tableData = await this.staticWebTableData.nth(i).textContent();
+            console.log(`${tableHeading?.trim()} : ${tableData?.trim()}`);
+            if ((i + 1) % tableHeadingCount === 0) {
+                console.log("====================");
+            }
+        }
+    }
+
+    async workingWithDynamicWebTable() {
+        let tableHeadingCount = await this.dynamicWebTableHeading.count();
+        let tableDataCount = await this.dynamicWebTableData.count();
+        for (let i = 0; i < tableDataCount; i++) {
+            let tableHeading = await this.dynamicWebTableData.nth(i % tableHeadingCount).textContent();
+            let tableData = await this.dynamicWebTableData.nth(i).textContent();
+            console.log(`${tableHeading?.trim()} : ${tableData?.trim()}`);
+            if ((i + 1) % tableHeadingCount === 0) {
+                console.log("====================");
+            }
+        }
+    }
+
+
+}
+
+
+
