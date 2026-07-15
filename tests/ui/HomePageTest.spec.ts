@@ -40,14 +40,19 @@ test("Working with upload file details section", async ({ homePage }) => {
 test("Working with upload multiple details section", async ({ homePage }) => {
     await homePage.navigateToURL();
     await homePage.uploadMultipleFile("test-data/SampleTest.pdf");
-})
+});
 
 test("Working subscribed to section", async ({ homePage }) => {
     await homePage.navigateToURL();
     await homePage.handlingSubscribeToSection();
-})
+});
 
 test("Working with static table", async ({ homePage }) => {
     await homePage.navigateToURL();
     await homePage.workingWithStaticWebTable();
-})
+});
+
+test("Working with dynamic table", async ({ homePage }) => {
+    await homePage.navigateToURL();
+    await homePage.workingWithDynamicWebTable();
+});
