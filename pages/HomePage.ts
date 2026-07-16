@@ -86,7 +86,10 @@ export class HomePage extends BasePage {
 
 
     async navigateToURL() {
-        await this.goto("https://testautomationpractice.blogspot.com/");
+        await test.step("Navigating to the URL", async () => {
+            await this.goto("https://testautomationpractice.blogspot.com/");
+            console.log(`Navigated to the URL correctly`);
+        })
     }
 
     async verifyTitleOfGUISection() {
@@ -103,7 +106,6 @@ export class HomePage extends BasePage {
         });
     }
 
-
     async fillBasicDetails(name: string, email: string, phoneNumber: bigint, address: string) {
         await test.step(`Started to fill the basic details into form`, async () => {
             await this.fill(this.nameField, name.trim());
@@ -111,7 +113,6 @@ export class HomePage extends BasePage {
             await this.fill(this.phoneField, phoneNumber.toString());
             await this.fill(this.addressField, address);
         });
-
         await test.step(`selcting the other details`, async () => {
             await this.maleRadioButton.click();
             await this.sundayDay.click();
@@ -147,83 +148,114 @@ export class HomePage extends BasePage {
     }
 
     async handlingDatePicker1(date: Date) {
-        await this.fill(this.datePicker1Field, date.toString());
-        console.log(`selected date from the datepicker 1 is ${date}`);
+        await test.step("Filling the date directly with input tag for date picker 1", async () => {
+            await this.fill(this.datePicker1Field, date.toString());
+            console.log(`selected date from the datepicker 1 is ${date}`);
+        });
     }
 
     async handlingDatePicker2(month: string, year: string, date: number) {
-        await this.datePicker2Field.click();
-        await this.datePickerUI.waitFor({ state: 'visible', timeout: 6000 });
-        await this.datePickerMonthSelection.selectOption({ label: month });
-        await this.datePickerYearSelection.selectOption({ value: year });
-        await this.page.locator(`.ui-datepicker-calendar tbody td a:text-is("${date}")`).click();
-        console.log("Date has been selected");
+        await test.step("Clicking on date picker 2 and waiting for UI", async () => {
+            await this.datePicker2Field.click();
+            await this.datePickerUI.waitFor({ state: 'visible', timeout: 6000 });
+        });
+        await test.step("Selecting the month, year and date from the calender UI", async () => {
+            await this.datePickerMonthSelection.selectOption({ label: month });
+            await this.datePickerYearSelection.selectOption({ value: year });
+            await this.page.locator(`.ui-datepicker-calendar tbody td a:text-is("${date}")`).click();
+            console.log("Date has been selected");
+        });
     }
 
     async checkingValidationMessageForDateField3() {
-        await this.datePicker3SubmitButton.click();
-        await expect(this.datePicker3ValidationMessage).toBeVisible();
-        console.log("Date Picker Validation Message 3 is visilbe completely");
+        await test.step("Clicking on submit button of date picker 3", async () => {
+            await this.datePicker3SubmitButton.click();
+        });
+        await test.step("Validating the date picker 3 validation message", async () => {
+            await expect(this.datePicker3ValidationMessage).toBeVisible();
+            console.log("Date Picker Validation Message 3 is visilbe completely");
+        });
     }
 
     async checkRangeBetweenDates(startDate: string, endDate: string) {
-        await this.datePicker3StartDate.fill(startDate.toString());
-        await this.datePicker3EndDate.fill(endDate.toString());
-        await this.datePicker3SubmitButton.click();
-        await expect(this.dateRangeMessage).toBeVisible();
-        let message: string | null = await this.dateRangeMessage.textContent();
-        if (message != null && message.trim() != "") {
-            console.log(`${message}`);
-        }
-        else {
-            console.log(`unable to fetch the date range`);
-        }
+        await test.step("Filling the start and end date into fields", async () => {
+            await this.datePicker3StartDate.fill(startDate.toString());
+            await this.datePicker3EndDate.fill(endDate.toString());
+        });
+        await test.step("Clicking on submit button and checking message is visible", async () => {
+
+            await this.datePicker3SubmitButton.click();
+            await expect(this.dateRangeMessage).toBeVisible();
+        });
+        await test.step("Verifying the date range message and printing it into console", async () => {
+            let message: string | null = await this.dateRangeMessage.textContent();
+            if (message != null && message.trim() != "") {
+                console.log(`${message}`);
+            }
+            else {
+                console.log(`unable to fetch the date range`);
+            }
+        });
     }
 
     async uploadSingleFile(fileToUpload: string) {
-        await this.uploadSingleFileSection.setInputFiles(fileToUpload);
+        await test.step("Uploading the single file", async () => {
+            await this.uploadSingleFileSection.setInputFiles(fileToUpload);
+        });
     }
 
     async uploadMultipleFile(fileToUpload: string) {
-        await this.uploadMultipleFileSection.setInputFiles([fileToUpload, fileToUpload, fileToUpload]);
+        await test.step("Uploading the multiple same files", async () => {
+            await this.uploadMultipleFileSection.setInputFiles([fileToUpload, fileToUpload, fileToUpload]);
+        });
     }
 
     async handlingSubscribeToSection() {
-        let parentPage = this.page;
-        const [newPage] = await Promise.all([
-            this.page.context().waitForEvent('page'),
-            this.subscribeToPostSection.click(),
-        ]);
-        await newPage.waitForLoadState('networkidle');
-        await expect(newPage).toHaveURL("https://testautomationpractice.blogspot.com/feeds/posts/default", { timeout: 6000 });
-        await parentPage.bringToFront();
-        console.log("Parent page is bringed to to front again");
+        await test.step("Creating a new Page object and validating it with url", async () => {
+            let parentPage = this.page;
+            const [newPage] = await Promise.all([
+                this.page.context().waitForEvent('page'),
+                this.subscribeToPostSection.click(),
+            ]);
+            await newPage.waitForLoadState('networkidle');
+            await expect(newPage).toHaveURL("https://testautomationpractice.blogspot.com/feeds/posts/default", { timeout: 6000 });
+            await parentPage.bringToFront();
+            console.log("Parent page is bringed to to front again");
+        })
     }
 
     async workingWithStaticWebTable() {
-        let tableHeadingCount = await this.staticWebTableHeading.count();
-        let tableDataCount = await this.staticWebTableData.count();
-        for (let i = 0; i < tableDataCount; i++) {
-            let tableHeading = await this.staticWebTableHeading.nth(i % tableHeadingCount).textContent();
-            let tableData = await this.staticWebTableData.nth(i).textContent();
-            console.log(`${tableHeading?.trim()} : ${tableData?.trim()}`);
-            if ((i + 1) % tableHeadingCount === 0) {
-                console.log("====================");
+        await test.step("Fetching the details of static table", async () => {
+            let tableHeadingCount = await this.staticWebTableHeading.count();
+            let tableDataCount = await this.staticWebTableData.count();
+            for (let i = 0; i < tableDataCount; i++) {
+                let tableHeading = await this.staticWebTableHeading.nth(i % tableHeadingCount).textContent();
+                let tableData = await this.staticWebTableData.nth(i).textContent();
+                console.log(`${tableHeading?.trim()} : ${tableData?.trim()}`);
+                if ((i + 1) % tableHeadingCount === 0) {
+                    console.log("====================");
+                }
             }
-        }
+        });
     }
 
     async workingWithDynamicWebTable() {
-        let tableHeadingCount = await this.dynamicWebTableHeading.count();
-        let tableDataCount = await this.dynamicWebTableData.count();
-        for (let i = 0; i < tableDataCount; i++) {
-            let tableHeading = await this.dynamicWebTableData.nth(i % tableHeadingCount).textContent();
-            let tableData = await this.dynamicWebTableData.nth(i).textContent();
-            console.log(`${tableHeading?.trim()} : ${tableData?.trim()}`);
-            if ((i + 1) % tableHeadingCount === 0) {
-                console.log("====================");
+        await test.step("fetching the details of table", async () => {
+            let tableHeadingCount = await this.dynamicWebTableHeading.count();
+            let tableDataCount = await this.dynamicWebTableData.count();
+            for (let i = 0; i < tableDataCount; i++) {
+                let tableHeading = await this.dynamicWebTableData.nth(i % tableHeadingCount).textContent();
+                let tableData = await this.dynamicWebTableData.nth(i).textContent();
+                console.log(`${tableHeading?.trim()} : ${tableData?.trim()}`);
+                if ((i + 1) % tableHeadingCount === 0) {
+                    console.log("====================");
+                }
             }
-        }
+        });
+    }
+
+    async workingWithPaginationWebTable() {
+
     }
 
 
