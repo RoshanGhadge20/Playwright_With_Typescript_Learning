@@ -26,14 +26,19 @@ export class HomePage extends BasePage {
     private readonly datePickerYearSelection: Locator;
     private readonly datePicker3SubmitButton: Locator;
     private readonly datePicker3ValidationMessage: Locator;
-    private readonly datePicker3StartDate: Locator
-    private readonly datePicker3EndDate: Locator
+    private readonly datePicker3StartDate: Locator;
+    private readonly datePicker3EndDate: Locator;
     private readonly dateRangeMessage: Locator;
     private readonly subscribeToPostSection: Locator;
     private readonly staticWebTableHeading: Locator;
     private readonly staticWebTableData: Locator;
     private readonly dynamicWebTableHeading: Locator;
     private readonly dynamicWebTableData: Locator;
+    private readonly searchInputField: Locator;
+    private readonly searchButton: Locator;
+    private readonly searchResultSection: Locator;
+    private readonly searchResults: Locator;
+
 
 
     constructor(page: Page) {
@@ -81,6 +86,12 @@ export class HomePage extends BasePage {
         // Dynamic Web Table Handling 
         this.dynamicWebTableHeading = this.page.locator("table#taskTable thead tr  th");
         this.dynamicWebTableData = this.page.locator("table#taskTable tbody tr  td");
+
+        // Search Wikipedia section
+        this.searchInputField = this.page.locator("#Wikipedia1_wikipedia-search-input");
+        this.searchButton = this.page.locator("input.wikipedia-search-button").and(page.locator("input[type = 'submit']"));
+        this.searchResultSection = this.page.locator(".wikipedia-search-results#Wikipedia1_wikipedia-search-results");
+        this.searchResults = this.page.locator(".wikipedia-search-results#Wikipedia1_wikipedia-search-results div a");
     }
 
 
@@ -255,7 +266,19 @@ export class HomePage extends BasePage {
     }
 
     async workingWithPaginationWebTable() {
+    }
 
+    async workingWithSearchField(input: string) {
+        await this.searchInputField.pressSequentially(input, { delay: 800 });
+        await this.searchButton.click();
+        await this.page.waitForTimeout(4000);
+        await expect(this.searchResultSection).toBeVisible({ timeout: 6000 });
+        let countOfSearchResults = await this.searchResults.count();
+        console.log(`Count of Search Result are ${countOfSearchResults}`);
+        const searchResultsArray: string[] = await this.searchResults.allTextContents();
+        searchResultsArray.forEach(result => {
+            console.log(`Printing the all results ${result}`);
+        });
     }
 
 
