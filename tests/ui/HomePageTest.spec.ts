@@ -56,3 +56,9 @@ test("Working with dynamic table", async ({ homePage }) => {
     await homePage.navigateToURL();
     await homePage.workingWithDynamicWebTable();
 });
+
+
+test("Working with wikipedia search", async ({ homePage }) => {
+    await homePage.navigateToURL();
+    await homePage.workingWithSearchField("Roshan");
+});
