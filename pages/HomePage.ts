@@ -38,6 +38,10 @@ export class HomePage extends BasePage {
     private readonly searchButton: Locator;
     private readonly searchResultSection: Locator;
     private readonly searchResults: Locator;
+    private readonly paginationCount: Locator;
+    private readonly tableHeadings: Locator;
+    private readonly tableData: Locator;
+
 
 
 
@@ -86,6 +90,11 @@ export class HomePage extends BasePage {
         // Dynamic Web Table Handling 
         this.dynamicWebTableHeading = this.page.locator("table#taskTable thead tr  th");
         this.dynamicWebTableData = this.page.locator("table#taskTable tbody tr  td");
+
+        // Working with Pagination Table 
+        this.paginationCount = this.page.locator(".pagination#pagination li");
+        this.tableHeadings = this.page.locator("#productTable thead tr th");
+        this.tableData = this.page.locator("#productTable tbody tr td");
 
         // Search Wikipedia section
         this.searchInputField = this.page.locator("#Wikipedia1_wikipedia-search-input");
@@ -266,13 +275,31 @@ export class HomePage extends BasePage {
     }
 
     async workingWithPaginationWebTable() {
+        let countOfLoops = await this.paginationCount.count();
+        console.log(`Need to loop for ${countOfLoops} times for fetching the data`);
+        const tbHeading: string[] = await this.tableHeadings.allTextContents();
+        // tbHeading.forEach(heading => console.log(`All table headings are the ${heading}`));
+        console.log(`${tbHeading.join(" | ")}`);
+        for (let i = 0; i < countOfLoops; i++) {
+            await this.paginationCount.nth(i).click();
+            console.log(`Starting with Page ${i + 1} to retrieve the data`);
+            const tbData: string[] = await this.tableData.allTextContents();
+            // tbData.forEach(data => console.log(`Table data ${data}`));
+            for (let j = 0; j < tbData.length; j += 4) {
+                console.log(`${tbData[j]} | ${tbData[j + 1]} | ${tbData[j + 2]} | ${tbData[j + 3]}`);
+            }
+            console.log(`===== ====== ===== ====`)
+        }
+
+
     }
 
     async workingWithSearchField(input: string) {
         await this.searchInputField.pressSequentially(input, { delay: 800 });
         await this.searchButton.click();
-        await this.page.waitForTimeout(4000);
+        // await this.page.waitForTimeout(4000);
         await expect(this.searchResultSection).toBeVisible({ timeout: 6000 });
+        await expect(this.searchResults.first()).toBeVisible();
         let countOfSearchResults = await this.searchResults.count();
         console.log(`Count of Search Result are ${countOfSearchResults}`);
         const searchResultsArray: string[] = await this.searchResults.allTextContents();

@@ -62,3 +62,9 @@ test("Working with wikipedia search", async ({ homePage }) => {
     await homePage.navigateToURL();
     await homePage.workingWithSearchField("Roshan");
 });
+
+
+test("Working with pagination of table", async ({ homePage }) => {
+    await homePage.navigateToURL();
+    await homePage.workingWithPaginationWebTable();
+});
