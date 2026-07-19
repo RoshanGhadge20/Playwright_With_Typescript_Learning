@@ -17,6 +17,7 @@ export const test = base.extend<pageFixture>(
 
         // Home Page 
         homePage: async ({ page }, use) => {
+            await page.goto("https://testautomationpractice.blogspot.com/", { waitUntil: 'networkidle' });
             await use(new HomePage(page));
         },
     }
