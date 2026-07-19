@@ -41,6 +41,7 @@ export class HomePage extends BasePage {
     private readonly paginationCount: Locator;
     private readonly tableHeadings: Locator;
     private readonly tableData: Locator;
+    private readonly dynamicButtonField: Locator;
 
 
 
@@ -101,16 +102,19 @@ export class HomePage extends BasePage {
         this.searchButton = this.page.locator("input.wikipedia-search-button").and(page.locator("input[type = 'submit']"));
         this.searchResultSection = this.page.locator(".wikipedia-search-results#Wikipedia1_wikipedia-search-results");
         this.searchResults = this.page.locator(".wikipedia-search-results#Wikipedia1_wikipedia-search-results div a");
+
+        // Dynamic Button 
+        this.dynamicButtonField = this.page.getByRole('button', { name: /st/i });
     }
 
 
 
-    async navigateToURL() {
-        await test.step("Navigating to the URL", async () => {
-            await this.goto("https://testautomationpractice.blogspot.com/");
-            console.log(`Navigated to the URL correctly`);
-        })
-    }
+    // async navigateToURL() {
+    //     await test.step("Navigating to the URL", async () => {
+    //         await this.goto("https://testautomationpractice.blogspot.com/");
+    //         console.log(`Navigated to the URL correctly`);
+    //     })
+    // }
 
     async verifyTitleOfGUISection() {
         await test.step("Fetching the text Content of page title", async () => {
@@ -306,6 +310,27 @@ export class HomePage extends BasePage {
         searchResultsArray.forEach(result => {
             console.log(`Printing the all results ${result}`);
         });
+    }
+
+    async workingWithDynamicButtonField() {
+        let buttonState = await this.dynamicButtonField.textContent();
+        console.log(`First Initiatl condition of the button is ${buttonState}`);
+        if (buttonState == 'START') {
+            await this.dynamicButtonField.click();
+        }
+        else {
+            console.log(`Button state is not as expected to initial of stage currently its into the ${buttonState}`);
+        }
+        buttonState = await this.dynamicButtonField.textContent();
+        console.log(`Second condition of the button is ${buttonState}`);
+        await this.dynamicButtonField.click();
+        buttonState = await this.dynamicButtonField.textContent();
+        if (buttonState == 'START') {
+            console.log(`Again set up the button as its original state`);
+        }
+        else {
+            console.log(`Button is not yet into its initiatl setup stage`);
+        }
     }
 
 
