@@ -3,7 +3,7 @@ import { BasePage } from './BasePage';
 
 export class HomePage extends BasePage {
 
-    // Data Entry Form Locators 
+    // Data Entry Form Locators
     private readonly dataEntryFormTitle: Locator;
     private readonly nameField: Locator;
     private readonly emailField: Locator;
@@ -17,8 +17,12 @@ export class HomePage extends BasePage {
     private readonly colorFieldOptions: Locator;
     private readonly sortedListField: Locator;
     private readonly sortedListFieldOptions: Locator;
+
+    // File Upload Section
     private readonly uploadSingleFileSection: Locator;
     private readonly uploadMultipleFileSection: Locator;
+
+    // Date picker fields
     private readonly datePicker1Field: Locator;
     private readonly datePicker2Field: Locator;
     private readonly datePickerUI: Locator;
@@ -29,20 +33,34 @@ export class HomePage extends BasePage {
     private readonly datePicker3StartDate: Locator;
     private readonly datePicker3EndDate: Locator;
     private readonly dateRangeMessage: Locator;
+
+    // Subscribe to section
     private readonly subscribeToPostSection: Locator;
     private readonly staticWebTableHeading: Locator;
+
+    // Web Tables Data
     private readonly staticWebTableData: Locator;
     private readonly dynamicWebTableHeading: Locator;
     private readonly dynamicWebTableData: Locator;
+
+    // Search Field section
     private readonly searchInputField: Locator;
     private readonly searchButton: Locator;
     private readonly searchResultSection: Locator;
     private readonly searchResults: Locator;
+
+    // Pagination table section
     private readonly paginationCount: Locator;
     private readonly tableHeadings: Locator;
     private readonly tableData: Locator;
     private readonly dynamicButtonField: Locator;
 
+    // Alerts and Popups Section
+    private readonly simpleAlert: Locator;
+    private readonly confirmationAlert: Locator:
+    private readonly promptAlert: Locator;
+    private readonly newTab: Locator;
+    private readonly popupWindow: Locator;
 
 
 
@@ -105,16 +123,16 @@ export class HomePage extends BasePage {
 
         // Dynamic Button 
         this.dynamicButtonField = this.page.getByRole('button', { name: /st/i });
+
+        // Alerts and Popup section 
+        this.simpleAlert = this.page.getByText("Simple Alert");
+        this.confirmationAlert = this.page.getByText("Confirmation Alert");
+        this.promptAlert = this.page.getByText("Prompt Alert");
+        this.newTab = this.page.getByText("New Tab");
+        this.popupWindow = this.page.getByRole('button', { name: 'Popup Windows' })
+
     }
 
-
-
-    // async navigateToURL() {
-    //     await test.step("Navigating to the URL", async () => {
-    //         await this.goto("https://testautomationpractice.blogspot.com/");
-    //         console.log(`Navigated to the URL correctly`);
-    //     })
-    // }
 
     async verifyTitleOfGUISection() {
         await test.step("Fetching the text Content of page title", async () => {
@@ -279,58 +297,71 @@ export class HomePage extends BasePage {
     }
 
     async workingWithPaginationWebTable() {
-        let countOfLoops = await this.paginationCount.count();
-        console.log(`Need to loop for ${countOfLoops} times for fetching the data`);
-        const tbHeading: string[] = await this.tableHeadings.allTextContents();
-        // tbHeading.forEach(heading => console.log(`All table headings are the ${heading}`));
-        console.log(`${tbHeading.join(" | ")}`);
-        for (let i = 0; i < countOfLoops; i++) {
-            await this.paginationCount.nth(i).click();
-            console.log(`Starting with Page ${i + 1} to retrieve the data`);
-            const tbData: string[] = await this.tableData.allTextContents();
-            // tbData.forEach(data => console.log(`Table data ${data}`));
-            for (let j = 0; j < tbData.length; j += 4) {
-                console.log(`${tbData[j]} | ${tbData[j + 1]} | ${tbData[j + 2]} | ${tbData[j + 3]}`);
+        let countOfLoops: number;
+        test.step("Fetching the count of pagination and iterating through it", async () => {
+            countOfLoops = await this.paginationCount.count();
+            console.log(`Need to loop for ${countOfLoops} times for fetching the data`);
+            const tbHeading: string[] = await this.tableHeadings.allTextContents();
+            // tbHeading.forEach(heading => console.log(`All table headings are the ${heading}`));
+            console.log(`${tbHeading.join(" | ")}`);
+            for (let i = 0; i < countOfLoops; i++) {
+                await this.paginationCount.nth(i).click();
+                console.log(`Starting with Page ${i + 1} to retrieve the data`);
+                const tbData: string[] = await this.tableData.allTextContents();
+                // tbData.forEach(data => console.log(`Table data ${data}`));
+                for (let j = 0; j < tbData.length; j += 4) {
+                    console.log(`${tbData[j]} | ${tbData[j + 1]} | ${tbData[j + 2]} | ${tbData[j + 3]}`);
+                }
+                console.log(`===== ====== ===== ====`)
             }
-            console.log(`===== ====== ===== ====`)
-        }
+        });
 
 
     }
 
     async workingWithSearchField(input: string) {
-        await this.searchInputField.pressSequentially(input, { delay: 800 });
-        await this.searchButton.click();
-        // await this.page.waitForTimeout(4000);
-        await expect(this.searchResultSection).toBeVisible({ timeout: 6000 });
-        await expect(this.searchResults.first()).toBeVisible();
-        let countOfSearchResults = await this.searchResults.count();
-        console.log(`Count of Search Result are ${countOfSearchResults}`);
-        const searchResultsArray: string[] = await this.searchResults.allTextContents();
-        searchResultsArray.forEach(result => {
-            console.log(`Printing the all results ${result}`);
+        test.step(`Input to be entered into the field is ${input}`, async () => {
+            console.log(`Input parameter is ${input}`);
+        });
+        test.step("Entering the search text into the search input field", async () => {
+            await this.searchInputField.pressSequentially(input, { delay: 800 });
+            await this.searchButton.click();
+        });
+        test.step("Verifying with the search results appears", async () => {
+            await expect(this.searchResultSection).toBeVisible({ timeout: 6000 });
+            await expect(this.searchResults.first()).toBeVisible();
+        });
+        test.step("Fetching the search result count and iterating through it", async () => {
+            let countOfSearchResults = await this.searchResults.count();
+            console.log(`Count of Search Result are ${countOfSearchResults}`);
+            const searchResultsArray: string[] = await this.searchResults.allTextContents();
+            searchResultsArray.forEach(result => {
+                console.log(`Printing the all results ${result}`);
+            });
         });
     }
 
     async workingWithDynamicButtonField() {
-        let buttonState = await this.dynamicButtonField.textContent();
-        console.log(`First Initiatl condition of the button is ${buttonState}`);
-        if (buttonState == 'START') {
+        test.step("Firstly verifying the initial state of the button again changing the state of button", async () => {
+            let buttonState = await this.dynamicButtonField.textContent();
+            console.log(`First Initiatl condition of the button is ${buttonState}`);
+            if (buttonState == 'START') {
+                await this.dynamicButtonField.click();
+            }
+            else {
+                console.log(`Button state is not as expected to initial of stage currently its into the ${buttonState}`);
+            }
+            buttonState = await this.dynamicButtonField.textContent();
+            console.log(`Second condition of the button is ${buttonState}`);
             await this.dynamicButtonField.click();
-        }
-        else {
-            console.log(`Button state is not as expected to initial of stage currently its into the ${buttonState}`);
-        }
-        buttonState = await this.dynamicButtonField.textContent();
-        console.log(`Second condition of the button is ${buttonState}`);
-        await this.dynamicButtonField.click();
-        buttonState = await this.dynamicButtonField.textContent();
-        if (buttonState == 'START') {
-            console.log(`Again set up the button as its original state`);
-        }
-        else {
-            console.log(`Button is not yet into its initiatl setup stage`);
-        }
+            buttonState = await this.dynamicButtonField.textContent();
+            if (buttonState == 'START') {
+                console.log(`Again set up the button as its original state`);
+            }
+            else {
+                console.log(`Button is not yet into its initiatl setup stage`);
+            }
+        });
     }
 
 
