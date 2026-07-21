@@ -1,5 +1,5 @@
 import { test } from '../../fixtures/page.fixture';
-import { LoginPage } from '../../pages/LoginPage'
+import { LoginPage } from '../../pages/'
 import { env } from '../../config/global-setup';
 
 

@@ -1,5 +1,5 @@
 import { Page, test, expect, Locator } from '@playwright/test'
-import { BasePage } from './BasePage';
+import { BasePage } from '../pages';
 import { env } from '../config/global-setup';
 
 

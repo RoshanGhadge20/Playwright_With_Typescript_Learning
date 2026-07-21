@@ -1,5 +1,5 @@
 import { Page, test, expect, Locator } from '@playwright/test'
-import { BasePage } from './BasePage';
+import { BasePage } from '../pages';
 
 export class HomePage extends BasePage {
 
@@ -57,10 +57,11 @@ export class HomePage extends BasePage {
 
     // Alerts and Popups Section
     private readonly simpleAlert: Locator;
-    private readonly confirmationAlert: Locator:
+    private readonly confirmationAlert: Locator;
     private readonly promptAlert: Locator;
     private readonly newTab: Locator;
     private readonly popupWindow: Locator;
+    private readonly promptMessage: Locator;
 
 
 
@@ -125,9 +126,10 @@ export class HomePage extends BasePage {
         this.dynamicButtonField = this.page.getByRole('button', { name: /st/i });
 
         // Alerts and Popup section 
-        this.simpleAlert = this.page.getByText("Simple Alert");
-        this.confirmationAlert = this.page.getByText("Confirmation Alert");
-        this.promptAlert = this.page.getByText("Prompt Alert");
+        this.simpleAlert = this.page.locator("button#alertBtn");
+        this.confirmationAlert = this.page.locator("button#confirmBtn");
+        this.promptAlert = this.page.locator("button#promptBtn");
+        this.promptMessage = this.page.locator("p#demo");
         this.newTab = this.page.getByText("New Tab");
         this.popupWindow = this.page.getByRole('button', { name: 'Popup Windows' })
 
@@ -363,6 +365,44 @@ export class HomePage extends BasePage {
             }
         });
     }
+
+    async workingWithAlerts() {
+        // Handling simple dialog
+        this.page.on('dialog', async (dialog) => {
+            if (dialog.type() === 'alert') {
+                console.log("This is an Alert");
+                await dialog.accept();
+            }
+        });
+        await this.simpleAlert.click();
+        console.log(`simple alert is displayed and its accepted`);
+
+        // Handling confirmation dialog
+        this.page.once('dialog', async (dialog) => {
+            if (dialog.type() === 'alert') {
+                console.log(`this is the alert with messgage of :- ${dialog.message()}`);
+            }
+            await dialog.accept();
+        });
+        await this.confirmationAlert.click();
+        console.log(`confirmation dialog is accepted`);
+
+
+        // Handling prompt dialog
+        this.page.once('dialog', async (dialog) => {
+            if (dialog.type() === 'prompt') {
+                console.log("This is an Prompt");
+                console.log(`Prompt message is:-  ${dialog.message()}`);
+                await dialog.accept("Roshan Ghadge");
+            }
+        });
+        await this.promptAlert.click();
+        await expect(this.promptMessage).toBeVisible();
+        console.log(`Fetched text from the prompt alert is ${await this.promptMessage.textContent()}`);
+    }
+
+
+
 
 
 }
