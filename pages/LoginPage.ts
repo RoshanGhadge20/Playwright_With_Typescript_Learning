@@ -21,13 +21,8 @@ export class LoginPage extends BasePage {
         this.passwordFieldValidationMessage = this.page.getByText(/Your password is invalid!/i).first();
     }
 
-    async navigateToURL() {
-        await test.step("Navigating to the URL", async ({ }) => {
-            await this.goto(env.baseurl);
-        });
-    }
 
-    async loginWithValidDetails(username: string, password: string) {
+    async loginWithValidDetails(username: string, password: string): Promise<void> {
         await test.step(`Entering the user name - ${username.trim()} and password - ${password}`, async () => {
             await this.fill(this.userNameField, username.trim());
             await this.fill(this.passwordField, password.trim());
@@ -35,7 +30,7 @@ export class LoginPage extends BasePage {
         });
     }
 
-    async isUserLoggedIn() {
+    async isUserLoggedIn(): Promise<void> {
         await test.step(`Verifying the user is logged into system`, async () => {
             const fetchURL: string = this.page.url();
             console.log(`Fetched URL is ${fetchURL}`);
@@ -50,7 +45,7 @@ export class LoginPage extends BasePage {
         });
     }
 
-    async verifyIncorrectUserNameMessage(message: string) {
+    async verifyIncorrectUserNameMessage(message: string): Promise<void> {
         await test.step(`Checking the username field respective validation message is visible`, async () => {
             await expect(this.userNameFieldValidationMessage).toBeVisible();
             await expect(this.userNameFieldValidationMessage).toHaveText(message.trim())
@@ -58,7 +53,7 @@ export class LoginPage extends BasePage {
         });
     }
 
-    async verifyIncorrectPasswordValidationMessage(message: string) {
+    async verifyIncorrectPasswordValidationMessage(message: string): Promise<void> {
         await test.step(`Checking the password field validation message is visible`, async () => {
             await expect(this.passwordFieldValidationMessage).toBeVisible();
             await expect(this.passwordFieldValidationMessage).toHaveText(message.trim())

@@ -107,11 +107,11 @@ export class HomePage extends BasePage {
         this.staticWebTableHeading = this.page.locator("div.widget-content table[name='BookTable'] tbody tr th");
         this.staticWebTableData = this.page.locator("div.widget-content table[name='BookTable'] tbody tr td");
 
-        // Dynamic Web Table Handling 
+        // Dynamic Web Table Handling
         this.dynamicWebTableHeading = this.page.locator("table#taskTable thead tr  th");
         this.dynamicWebTableData = this.page.locator("table#taskTable tbody tr  td");
 
-        // Working with Pagination Table 
+        // Working with Pagination Table
         this.paginationCount = this.page.locator(".pagination#pagination li");
         this.tableHeadings = this.page.locator("#productTable thead tr th");
         this.tableData = this.page.locator("#productTable tbody tr td");
@@ -136,7 +136,7 @@ export class HomePage extends BasePage {
     }
 
 
-    async verifyTitleOfGUISection() {
+    async verifyTitleOfGUISection(): Promise<void> {
         await test.step("Fetching the text Content of page title", async () => {
             let sectionTitle = await this.dataEntryFormTitle.textContent();
             if (sectionTitle?.trim() && sectionTitle !== null) {
@@ -150,7 +150,7 @@ export class HomePage extends BasePage {
         });
     }
 
-    async fillBasicDetails(name: string, email: string, phoneNumber: bigint, address: string) {
+    async fillBasicDetails(name: string, email: string, phoneNumber: bigint, address: string): Promise<void {
         await test.step(`Started to fill the basic details into form`, async () => {
             await this.fill(this.nameField, name.trim());
             await this.fill(this.emailField, email.trim());
@@ -191,14 +191,14 @@ export class HomePage extends BasePage {
         });
     }
 
-    async handlingDatePicker1(date: Date) {
+    async handlingDatePicker1(date: Date): Promise<void> {
         await test.step("Filling the date directly with input tag for date picker 1", async () => {
             await this.fill(this.datePicker1Field, date.toString());
             console.log(`selected date from the datepicker 1 is ${date}`);
         });
     }
 
-    async handlingDatePicker2(month: string, year: string, date: number) {
+    async handlingDatePicker2(month: string, year: string, date: number): Promise<void> {
         await test.step("Clicking on date picker 2 and waiting for UI", async () => {
             await this.datePicker2Field.click();
             await this.datePickerUI.waitFor({ state: 'visible', timeout: 6000 });
@@ -211,7 +211,7 @@ export class HomePage extends BasePage {
         });
     }
 
-    async checkingValidationMessageForDateField3() {
+    async checkingValidationMessageForDateField3(): Promise<void> {
         await test.step("Clicking on submit button of date picker 3", async () => {
             await this.datePicker3SubmitButton.click();
         });
@@ -221,7 +221,7 @@ export class HomePage extends BasePage {
         });
     }
 
-    async checkRangeBetweenDates(startDate: string, endDate: string) {
+    async checkRangeBetweenDates(startDate: string, endDate: string): Promise<void> {
         await test.step("Filling the start and end date into fields", async () => {
             await this.datePicker3StartDate.fill(startDate.toString());
             await this.datePicker3EndDate.fill(endDate.toString());
@@ -242,19 +242,19 @@ export class HomePage extends BasePage {
         });
     }
 
-    async uploadSingleFile(fileToUpload: string) {
+    async uploadSingleFile(fileToUpload: string): Promise<void> {
         await test.step("Uploading the single file", async () => {
             await this.uploadSingleFileSection.setInputFiles(fileToUpload);
         });
     }
 
-    async uploadMultipleFile(fileToUpload: string) {
+    async uploadMultipleFile(fileToUpload: string): Promise<void> {
         await test.step("Uploading the multiple same files", async () => {
             await this.uploadMultipleFileSection.setInputFiles([fileToUpload, fileToUpload, fileToUpload]);
         });
     }
 
-    async handlingSubscribeToSection() {
+    async handlingSubscribeToSection(): Promise<void> {
         await test.step("Creating a new Page object and validating it with url", async () => {
             let parentPage = this.page;
             const [newPage] = await Promise.all([
@@ -268,7 +268,7 @@ export class HomePage extends BasePage {
         })
     }
 
-    async workingWithStaticWebTable() {
+    async workingWithStaticWebTable(): Promise<void> {
         await test.step("Fetching the details of static table", async () => {
             let tableHeadingCount = await this.staticWebTableHeading.count();
             let tableDataCount = await this.staticWebTableData.count();
@@ -283,7 +283,7 @@ export class HomePage extends BasePage {
         });
     }
 
-    async workingWithDynamicWebTable() {
+    async workingWithDynamicWebTable(): Promise<void> {
         await test.step("fetching the details of table", async () => {
             let tableHeadingCount = await this.dynamicWebTableHeading.count();
             let tableDataCount = await this.dynamicWebTableData.count();
@@ -298,7 +298,7 @@ export class HomePage extends BasePage {
         });
     }
 
-    async workingWithPaginationWebTable() {
+    async workingWithPaginationWebTable(): Promise<void> {
         let countOfLoops: number;
         test.step("Fetching the count of pagination and iterating through it", async () => {
             countOfLoops = await this.paginationCount.count();
@@ -321,7 +321,7 @@ export class HomePage extends BasePage {
 
     }
 
-    async workingWithSearchField(input: string) {
+    async workingWithSearchField(input: string): Promise<void> {
         test.step(`Input to be entered into the field is ${input}`, async () => {
             console.log(`Input parameter is ${input}`);
         });
@@ -343,7 +343,7 @@ export class HomePage extends BasePage {
         });
     }
 
-    async workingWithDynamicButtonField() {
+    async workingWithDynamicButtonField(): Promise<void> {
         test.step("Firstly verifying the initial state of the button again changing the state of button", async () => {
             let buttonState = await this.dynamicButtonField.textContent();
             console.log(`First Initiatl condition of the button is ${buttonState}`);
@@ -366,7 +366,7 @@ export class HomePage extends BasePage {
         });
     }
 
-    async workingWithAlerts() {
+    async workingWithAlerts(): Promise<void> {
         // Handling simple dialog
         this.page.on('dialog', async (dialog) => {
             if (dialog.type() === 'alert') {
