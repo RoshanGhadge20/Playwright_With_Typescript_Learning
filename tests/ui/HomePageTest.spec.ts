@@ -1,6 +1,6 @@
 import { test } from './../../fixtures/page.fixture'
-import { HomePage } from '../../pages/HomePage'
-import { homedir } from 'node:os';
+import { LoginPage, HomePage } from '../../pages';
+
 
 test.describe("All HomePage Interaction Individual Tests", () => {
     test("Verifying the page section title of the", async ({ homePage }) => {
@@ -60,6 +60,10 @@ test.describe("All HomePage Interaction Individual Tests", () => {
 
     test("Working with dynamic Button section", async ({ homePage }) => {
         await homePage.workingWithDynamicButtonField();
+    });
+
+    test("Working with all types of alerts", async ({ homePage }) => {
+        await homePage.workingWithAlerts();
     });
 
 });

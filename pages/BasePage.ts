@@ -7,16 +7,16 @@ export abstract class BasePage {
         this.page = page;
     }
 
-    async goto(URL: string) {
+    async goto(URL: string): Promise<void> {
         await this.page.goto(URL, { waitUntil: 'networkidle' });
     }
 
-    async click(locator: Locator) {
+    async click(locator: Locator): Promise<void> {
         await locator.waitFor({ state: 'visible', timeout: 6000 });
         await locator.click();
     }
 
-    async fill(locator: Locator, value: string) {
+    async fill(locator: Locator, value: string): Promise<void> {
         await locator.waitFor({ state: 'visible', timeout: 6000 });
         await locator.fill(value.toString());
     }
