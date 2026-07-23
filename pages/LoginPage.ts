@@ -1,6 +1,5 @@
 import { Page, test, expect, Locator } from '@playwright/test'
-import { BasePage } from '../pages';
-import { env } from '../config/global-setup';
+import { BasePage } from '../pages/BasePage';
 
 
 export class LoginPage extends BasePage {

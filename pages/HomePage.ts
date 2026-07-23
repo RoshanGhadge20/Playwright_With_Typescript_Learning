@@ -1,5 +1,5 @@
 import { Page, test, expect, Locator } from '@playwright/test'
-import { BasePage } from '../pages';
+import { BasePage } from '../pages/BasePage';
 
 export class HomePage extends BasePage {
 
@@ -150,7 +150,7 @@ export class HomePage extends BasePage {
         });
     }
 
-    async fillBasicDetails(name: string, email: string, phoneNumber: bigint, address: string): Promise<void {
+    async fillBasicDetails(name: string, email: string, phoneNumber: bigint, address: string): Promise<void> {
         await test.step(`Started to fill the basic details into form`, async () => {
             await this.fill(this.nameField, name.trim());
             await this.fill(this.emailField, email.trim());
