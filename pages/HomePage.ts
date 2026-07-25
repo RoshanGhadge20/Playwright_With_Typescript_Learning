@@ -76,60 +76,60 @@ export class HomePage extends BasePage {
         this.addressField = this.page.locator("textarea#textarea");
         this.maleRadioButton = this.page.getByRole('radio', { name: 'male' }).first();
         this.sundayDay = this.page.getByRole('checkbox', { name: 'Sunday' }).first();
-        this.countryDropdown = this.page.locator("select#country");
-        this.countryDropdownOptions = this.page.locator("select#country option");
-        this.colorsField = this.page.locator("select#colors");
-        this.colorFieldOptions = this.page.locator("select#colors option");
-        this.sortedListField = this.page.locator("select#animals");
-        this.sortedListFieldOptions = this.page.locator("select#animals option");
-        this.uploadSingleFileSection = this.page.locator("input#singleFileInput");
-        this.uploadMultipleFileSection = this.page.locator("input#multipleFilesInput");
+        this.countryDropdown = this.page.locator("css=select#country");
+        this.countryDropdownOptions = this.page.locator("css=select#country option");
+        this.colorsField = this.page.locator("css=select#colors");
+        this.colorFieldOptions = this.page.locator("css=select#colors option");
+        this.sortedListField = this.page.locator("css=select#animals");
+        this.sortedListFieldOptions = this.page.locator("css=select#animals option");
+        this.uploadSingleFileSection = this.page.locator("css=input#singleFileInput");
+        this.uploadMultipleFileSection = this.page.locator("css=input#multipleFilesInput");
 
         // Date picker UI 1 element field
-        this.datePicker1Field = this.page.locator("input#datepicker");
+        this.datePicker1Field = this.page.locator("css=input#datepicker");
 
         // Date Picker 2 UI elements
-        this.datePicker2Field = this.page.locator("input#txtDate");
-        this.datePickerUI = this.page.locator("div#ui-datepicker-div");
-        this.datePickerMonthSelection = this.page.locator("select.ui-datepicker-month");
-        this.datePickerYearSelection = this.page.locator("select.ui-datepicker-year");
+        this.datePicker2Field = this.page.locator("css=input#txtDate");
+        this.datePickerUI = this.page.locator("css=div#ui-datepicker-div");
+        this.datePickerMonthSelection = this.page.locator("css=select.ui-datepicker-month");
+        this.datePickerYearSelection = this.page.locator("css=select.ui-datepicker-year");
 
         // Date Picker 3 UI elements
-        this.datePicker3SubmitButton = this.page.locator("button.submit-btn");
-        this.datePicker3ValidationMessage = this.page.locator("div#result");
-        this.datePicker3StartDate = this.page.locator("input#start-date");
-        this.datePicker3EndDate = this.page.locator("input#end-date")
-        this.dateRangeMessage = this.page.locator("div#result");
+        this.datePicker3SubmitButton = this.page.locator("css=button.submit-btn");
+        this.datePicker3ValidationMessage = this.page.locator("css=div#result");
+        this.datePicker3StartDate = this.page.locator("css=input#start-date");
+        this.datePicker3EndDate = this.page.locator("css=input#end-date")
+        this.dateRangeMessage = this.page.locator("css=div#result");
 
         // Subscribe to section
         this.subscribeToPostSection = this.page.getByText("Posts (Atom)", { exact: false });
 
         // Static Web Table details
-        this.staticWebTableHeading = this.page.locator("div.widget-content table[name='BookTable'] tbody tr th");
-        this.staticWebTableData = this.page.locator("div.widget-content table[name='BookTable'] tbody tr td");
+        this.staticWebTableHeading = this.page.locator("css=div.widget-content table[name='BookTable'] tbody tr th");
+        this.staticWebTableData = this.page.locator("css=div.widget-content table[name='BookTable'] tbody tr td");
 
         // Dynamic Web Table Handling
-        this.dynamicWebTableHeading = this.page.locator("table#taskTable thead tr  th");
-        this.dynamicWebTableData = this.page.locator("table#taskTable tbody tr  td");
+        this.dynamicWebTableHeading = this.page.locator("css=table#taskTable thead tr  th");
+        this.dynamicWebTableData = this.page.locator("css=table#taskTable tbody tr  td");
 
         // Working with Pagination Table
-        this.paginationCount = this.page.locator(".pagination#pagination li");
-        this.tableHeadings = this.page.locator("#productTable thead tr th");
-        this.tableData = this.page.locator("#productTable tbody tr td");
+        this.paginationCount = this.page.locator("css=.pagination#pagination li");
+        this.tableHeadings = this.page.locator("css=#productTable thead tr th");
+        this.tableData = this.page.locator("css=#productTable tbody tr td");
 
         // Search Wikipedia section
-        this.searchInputField = this.page.locator("#Wikipedia1_wikipedia-search-input");
-        this.searchButton = this.page.locator("input.wikipedia-search-button").and(page.locator("input[type = 'submit']"));
-        this.searchResultSection = this.page.locator(".wikipedia-search-results#Wikipedia1_wikipedia-search-results");
-        this.searchResults = this.page.locator(".wikipedia-search-results#Wikipedia1_wikipedia-search-results div a");
+        this.searchInputField = this.page.locator("css=#Wikipedia1_wikipedia-search-input");
+        this.searchButton = this.page.locator("css=input.wikipedia-search-button").and(page.locator("input[type = 'submit']"));
+        this.searchResultSection = this.page.locator("css=.wikipedia-search-results#Wikipedia1_wikipedia-search-results");
+        this.searchResults = this.page.locator("css=.wikipedia-search-results#Wikipedia1_wikipedia-search-results div a");
 
         // Dynamic Button 
         this.dynamicButtonField = this.page.getByRole('button', { name: /st/i });
 
         // Alerts and Popup section 
-        this.simpleAlert = this.page.locator("button#alertBtn");
-        this.confirmationAlert = this.page.locator("button#confirmBtn");
-        this.promptAlert = this.page.locator("button#promptBtn");
+        this.simpleAlert = this.page.locator("css=button#alertBtn");
+        this.confirmationAlert = this.page.locator("css=button#confirmBtn");
+        this.promptAlert = this.page.locator("css=button#promptBtn");
         this.promptMessage = this.page.locator("p#demo");
         this.newTab = this.page.getByText("New Tab");
         this.popupWindow = this.page.getByRole('button', { name: 'Popup Windows' })
