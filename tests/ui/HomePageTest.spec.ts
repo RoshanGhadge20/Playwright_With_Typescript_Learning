@@ -66,4 +66,8 @@ test.describe("All HomePage Interaction Individual Tests", () => {
         await homePage.workingWithAlerts();
     });
 
+    test("Working with mouse hover section and fetching the suggested options", async ({ homePage }) => {
+        await homePage.workingWithMouseSection();
+    })
+
 });

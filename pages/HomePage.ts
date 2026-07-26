@@ -64,6 +64,10 @@ export class HomePage extends BasePage {
     private readonly popupWindow: Locator;
     private readonly promptMessage: Locator;
 
+    // Mouse Hover Sectin 
+    private readonly pointMeButton: Locator;
+    private readonly suggestedOptions: Locator;
+
 
 
     constructor(page: Page) {
@@ -134,6 +138,9 @@ export class HomePage extends BasePage {
         this.newTab = this.page.getByText("New Tab");
         this.popupWindow = this.page.getByRole('button', { name: 'Popup Windows' })
 
+        // mouse hover section
+        this.pointMeButton = this.page.locator("css=div.dropdown>button.dropbtn");
+        this.suggestedOptions = this.page.locator("css=div.dropdown-content a");
     }
 
 
@@ -400,6 +407,15 @@ export class HomePage extends BasePage {
         await this.promptAlert.click();
         await expect(this.promptMessage).toBeVisible();
         console.log(`Fetched text from the prompt alert is ${await this.promptMessage.textContent()}`);
+    }
+
+    async workingWithMouseSection(): Promise<void> {
+        await this.pointMeButton.hover();
+        await expect(this.suggestedOptions).toHaveCount(2);
+        let suggestedOptionText: string[] = await this.suggestedOptions.allTextContents();
+        for (const suggestedOption of suggestedOptionText) {
+            console.log(`Suggested Option is :- ${suggestedOption}`)
+        }
     }
 
 
