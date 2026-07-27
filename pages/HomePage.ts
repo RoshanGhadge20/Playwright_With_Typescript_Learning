@@ -1,4 +1,4 @@
-import { Page, test, expect, Locator } from '@playwright/test'
+import { Page, test, expect, Locator, BrowserContext } from '@playwright/test'
 import { BasePage } from '../pages/BasePage';
 import { validationMessage, roles } from '../config/enum';
 
@@ -407,6 +407,18 @@ export class HomePage extends BasePage {
         await this.promptAlert.click();
         await expect(this.promptMessage).toBeVisible();
         console.log(`Fetched text from the prompt alert is ${await this.promptMessage.textContent()}`);
+
+        // handling new tab
+        const context = this.page.context();
+        const newPagePromise = context.waitForEvent('page');
+        await this.newTab.click();
+        const newPage = await newPagePromise;
+        await newPage.waitForLoadState();
+        await expect(newPage).toHaveTitle("SDET-QA Blog");
+        console.log("Title is fetched and validated correctly");
+        await this.page.bringToFront();
+        console.log("The main page is bringed to the front");
+
     }
 
     async workingWithMouseSection(): Promise<void> {
