@@ -408,7 +408,7 @@ export class HomePage extends BasePage {
         await expect(this.promptMessage).toBeVisible();
         console.log(`Fetched text from the prompt alert is ${await this.promptMessage.textContent()}`);
 
-        // handling new tab
+        // Handling new tab
         const context = this.page.context();
         const newPagePromise = context.waitForEvent('page');
         await this.newTab.click();
@@ -419,6 +419,15 @@ export class HomePage extends BasePage {
         await this.page.bringToFront();
         console.log("The main page is bringed to the front");
 
+        // Handling popup window
+        const newPopupWindowPromise = this.page.waitForEvent('popup');
+        await this.popupWindow.click();
+        const newPopup = await newPopupWindowPromise;
+        await newPopup.waitForLoadState('networkidle');
+        // await expect(newPopup).toHaveTitle("Selenium logo green");
+        // console.log("Title is fetched from the popup and its validated correctly");
+        await this.page.bringToFront();
+        console.log("The main page is bringed to the front");
     }
 
     async workingWithMouseSection(): Promise<void> {
