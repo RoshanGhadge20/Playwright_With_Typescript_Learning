@@ -68,6 +68,9 @@ export class HomePage extends BasePage {
     private readonly pointMeButton: Locator;
     private readonly suggestedOptions: Locator;
 
+    // Double click section 
+    private readonly doubleClickButton: Locator;
+    private readonly field2: Locator;
 
 
     constructor(page: Page) {
@@ -141,6 +144,10 @@ export class HomePage extends BasePage {
         // mouse hover section
         this.pointMeButton = this.page.locator("css=div.dropdown>button.dropbtn");
         this.suggestedOptions = this.page.locator("css=div.dropdown-content a");
+
+        // Double click section
+        this.doubleClickButton = this.page.locator("button:text('Copy Text')");
+        this.field2 = this.page.locator("css=#field2");
     }
 
 
@@ -439,6 +446,15 @@ export class HomePage extends BasePage {
         }
     }
 
+    async workingWithDoubleClick(): Promise<void> {
+        let field2InputText: string;
+        field2InputText = await this.field2.inputValue();
+        console.log(`Current value of the field2 input after double click ${field2InputText}`);
+        console.log('Now performing the double click');
+        await this.doubleClickButton.dblclick();
+        field2InputText = await this.field2.inputValue();
+        console.log(`Current value of the field2 input after double click ${field2InputText}`);
+    }
 
 
 
