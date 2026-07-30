@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test:loginPage":"set ENV=test && npx playwright test LoginPageTest.spec.ts --project=chrome --headed",
+    "test:homePage":"set ENV=test && npx playwright test HomePageTest.spec.ts --project=chrome --headed"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
