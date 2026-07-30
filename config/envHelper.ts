@@ -10,7 +10,8 @@ const result = dotenv.config({
 
 export const ENV =
 {
-    BASEURL: process.env.BASEURL!,
+    BASEURL_LOGINPAGE: process.env.BASEURL_LOGINPAGE!,
     USERNAME: process.env.USER_NAME!,
-    PASSWORD: process.env.USER_PASSWORD!
+    PASSWORD: process.env.USER_PASSWORD!,
+    BASEURL_HOMEPAGE: process.env.BASEURL_HOMEPAGE!
 }

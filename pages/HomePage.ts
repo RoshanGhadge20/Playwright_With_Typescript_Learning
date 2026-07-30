@@ -72,6 +72,10 @@ export class HomePage extends BasePage {
     private readonly doubleClickButton: Locator;
     private readonly field2: Locator;
 
+    // Drag and Drop Section
+    private readonly dragSection: Locator;
+    private readonly dropSection: Locator;
+
 
     constructor(page: Page) {
         super(page);
@@ -148,6 +152,10 @@ export class HomePage extends BasePage {
         // Double click section
         this.doubleClickButton = this.page.locator("button:text('Copy Text')");
         this.field2 = this.page.locator("css=#field2");
+
+        // Drag and drop section 
+        this.dragSection = this.page.locator("div#draggable");
+        this.dropSection = this.page.locator("div#droppable");
     }
 
 
@@ -455,6 +463,12 @@ export class HomePage extends BasePage {
         field2InputText = await this.field2.inputValue();
         console.log(`Current value of the field2 input after double click ${field2InputText}`);
     }
+
+    async dragAndDrop(): Promise<void> {
+        await this.dragSection.dragTo(this.dropSection);
+        console.log("Item has been dragged and dropped successfully");
+    }
+
 
 
 

@@ -74,4 +74,7 @@ test.describe("All HomePage Interaction Individual Tests", () => {
         await homePage.workingWithDoubleClick();
     });
 
+    test("Working with drag and drop section", async ({ homePage }) => {
+        await homePage.dragAndDrop();
+    });
 });
