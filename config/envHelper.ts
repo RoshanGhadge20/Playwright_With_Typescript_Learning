@@ -7,7 +7,7 @@ console.log(`Env path :- ${envPath}`);
 const result = dotenv.config({
     path: envPath
 });
-
+1
 export const ENV =
 {
     BASEURL_LOGINPAGE: process.env.BASEURL_LOGINPAGE!,
