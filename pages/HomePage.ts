@@ -76,6 +76,19 @@ export class HomePage extends BasePage {
     private readonly dragSection: Locator;
     private readonly dropSection: Locator;
 
+    // Slider section
+    private readonly sliderRange: Locator;
+    private readonly sliderPriceRange: Locator;
+    private readonly leftSlider: Locator;
+    private readonly rightSlider: Locator;
+
+    // SVG Section 
+    private readonly svgContainer: Locator;
+    private readonly svgContainerCircle: Locator
+    private readonly svgContainerRect: Locator
+    private readonly svgContainerPolygon: Locator
+
+
 
     constructor(page: Page) {
         super(page);
@@ -153,9 +166,21 @@ export class HomePage extends BasePage {
         this.doubleClickButton = this.page.locator("button:text('Copy Text')");
         this.field2 = this.page.locator("css=#field2");
 
-        // Drag and drop section 
-        this.dragSection = this.page.locator("div#draggable");
-        this.dropSection = this.page.locator("div#droppable");
+        // Drag and drop section
+        this.dragSection = this.page.locator("css=div#draggable");
+        this.dropSection = this.page.locator("css=div#droppable");
+
+        // Working with slider section
+        this.sliderRange = this.page.locator("css=div#slider-range");
+        this.sliderPriceRange = this.page.locator("input#amount");
+        this.leftSlider = this.page.locator("css=div#slider-range span").first();
+        this.rightSlider = this.page.locator("xpath=//div[@id='slider - range']/span[2]");
+
+        // SVG Container 
+        this.svgContainer = this.page.locator("css=div.svg-container");
+        this.svgContainerCircle = this.page.locator("css=div.svg-container svg circle");
+        this.svgContainerRect = this.page.locator("css=div.svg-container svg rect");
+        this.svgContainerPolygon = this.page.locator("css=div.svg-container svg polygon");
     }
 
 
@@ -468,6 +493,38 @@ export class HomePage extends BasePage {
         await this.dragSection.dragTo(this.dropSection);
         console.log("Item has been dragged and dropped successfully");
     }
+
+    async sliderBoard(): Promise<void> {
+        const initialPriceRange: string = await this.sliderPriceRange.inputValue();
+        console.log("Initial price range:", initialPriceRange);
+        await this.page.evaluate(() => {
+            const jq = (window as any).$;
+            jq('#slider-range').slider('values', [150, 350]);
+        });
+        const updatedValues = await this.page.evaluate<number[]>(() => {
+            const jq = (window as any).$;
+            return jq('#slider-range').slider('values');
+        });
+        console.log("Updated values:", updatedValues);
+    }
+
+    async svgSection(): Promise<void> {
+        console.log("Working with svg section");
+        await expect(this.svgContainerCircle).toBeVisible();
+        console.log("SVG Circle is visible");
+        let fillValueCircle: string | null = await this.svgContainerCircle.getAttribute('fill');
+        console.log(`Fill Value of the SVG Circle is ${fillValueCircle}`);
+        await expect(this.svgContainerPolygon).toBeVisible();
+        console.log("SVG Polygon is visible");
+        let fillValuePolygon: string | null = await this.svgContainerPolygon.getAttribute('fill');
+        console.log(`Fill Value of the SVG Circle is ${fillValuePolygon}`);
+        await expect(this.svgContainerRect).toBeVisible();
+        console.log("SVG Rect is visible");
+        let fillValueRect: string | null = await this.svgContainerRect.getAttribute('fill');
+        console.log(`Fill Value of the SVG Circle is ${fillValueRect}`);
+    }
+
+
 
 
 

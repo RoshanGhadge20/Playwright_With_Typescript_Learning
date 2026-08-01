@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:loginPage":"set ENV=test && npx playwright test LoginPageTest.spec.ts --project=chrome --headed",
-    "test:homePage":"set ENV=test && npx playwright test HomePageTest.spec.ts --project=chrome --headed"
+    "test:loginPage": "set ENV=test && npx playwright test LoginPageTest.spec.ts --project=chrome --headed",
+    "test:homePage": "set ENV=test && npx playwright test HomePageTest.spec.ts --project=chrome --headed"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +13,7 @@
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.61.1",
+    "@types/jquery": "^4.0.1",
     "@types/node": "^26.1.0",
     "allure-commandline": "^2.43.0",
     "allure-playwright": "^3.10.2"
