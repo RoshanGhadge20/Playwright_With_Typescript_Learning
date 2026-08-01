@@ -77,4 +77,12 @@ test.describe("All HomePage Interaction Individual Tests", () => {
     test("Working with drag and drop section", async ({ homePage }) => {
         await homePage.dragAndDrop();
     });
+
+    test("Working with slider section", async ({ homePage }) => {
+        await homePage.sliderBoard();
+    });
+
+    test("Working with the SVG Section", async ({ homePage }) => {
+        await homePage.svgSection();
+    })
 });
