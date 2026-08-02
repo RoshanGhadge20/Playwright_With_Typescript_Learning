@@ -1,8 +1,12 @@
 import { Page, test, expect, Locator, BrowserContext } from '@playwright/test'
 import { BasePage } from '../pages/BasePage';
 import { validationMessage, roles } from '../config/enum';
+import { Footer } from './components/Footer';
 
 export class HomePage extends BasePage {
+
+    // Reading the components
+    readonly footer: Footer;
 
     // Data Entry Form Locators
     private readonly dataEntryFormTitle: Locator;
@@ -92,6 +96,11 @@ export class HomePage extends BasePage {
 
     constructor(page: Page) {
         super(page);
+
+        // Reading components
+        this.footer = new Footer(page);
+
+
         // Data Entry Form Locators
         this.dataEntryFormTitle = this.page.getByText("Data Entry Form");
         this.nameField = this.page.getByPlaceholder("Enter Name");
@@ -522,6 +531,11 @@ export class HomePage extends BasePage {
         console.log("SVG Rect is visible");
         let fillValueRect: string | null = await this.svgContainerRect.getAttribute('fill');
         console.log(`Fill Value of the SVG Circle is ${fillValueRect}`);
+    }
+
+    async handlignFooterSection(): Promise<void> {
+        let footerText = await this.footer.footerSectionControl();
+        console.log(`Footer text ${footerText}`);
     }
 
 
