@@ -85,4 +85,7 @@ test.describe("All HomePage Interaction Individual Tests", () => {
     test("Working with the SVG Section", async ({ homePage }) => {
         await homePage.svgSection();
     })
+    test("Working with the Footer Section", async ({ homePage }) => {
+        await homePage.handlignFooterSection();
+    })
 });
