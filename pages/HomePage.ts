@@ -2,6 +2,7 @@ import { Page, test, expect, Locator, BrowserContext } from '@playwright/test'
 import { BasePage } from '../pages/BasePage';
 import { validationMessage, roles } from '../config/enum';
 import { Footer } from './components/Footer';
+import { execPath } from 'node:process';
 
 export class HomePage extends BasePage {
 
@@ -92,12 +93,18 @@ export class HomePage extends BasePage {
     private readonly svgContainerRect: Locator
     private readonly svgContainerPolygon: Locator
 
+    // Scrolling dropdown section 
+    private readonly dropdownField: Locator;
+    private readonly dropdownSection: Locator;
+    private readonly firstdropdownOption: Locator;
+
+
 
 
     constructor(page: Page) {
         super(page);
 
-        // Reading components
+        // Reading components > composition 
         this.footer = new Footer(page);
 
 
@@ -190,6 +197,11 @@ export class HomePage extends BasePage {
         this.svgContainerCircle = this.page.locator("css=div.svg-container svg circle");
         this.svgContainerRect = this.page.locator("css=div.svg-container svg rect");
         this.svgContainerPolygon = this.page.locator("css=div.svg-container svg polygon");
+
+        // Scrolling dropdown section
+        this.dropdownField = this.page.locator("css=input#comboBox");
+        this.dropdownSection = this.page.locator("css=div#dropdown");
+        this.firstdropdownOption = this.page.locator("css=div#dropdown div").first();
     }
 
 
@@ -536,6 +548,16 @@ export class HomePage extends BasePage {
     async handlignFooterSection(): Promise<void> {
         let footerText = await this.footer.footerSectionControl();
         console.log(`Footer text ${footerText}`);
+    }
+
+    async scrollingDropdownSection(): Promise<void> {
+        await this.click(this.dropdownField);
+        await expect(this.dropdownSection).toBeVisible();
+        await expect(this.firstdropdownOption).toBeVisible();
+        await this.firstdropdownOption.click();
+        let inputValue = await this.dropdownField.inputValue();
+        console.log(`Input Value in the field is :- ${inputValue}`);
+
     }
 
 
