@@ -91,4 +91,8 @@ test.describe("All HomePage Interaction Individual Tests", () => {
     test("Working with the scrolling dropdown Section", async ({ homePage }) => {
         await homePage.scrollingDropdownSection();
     });
+    test("Working with the mobile label Section", async ({ homePage }) => {
+        await homePage.mobileLabelsFunction();
+    });
+
 });
