@@ -98,6 +98,11 @@ export class HomePage extends BasePage {
     private readonly dropdownSection: Locator;
     private readonly firstdropdownOption: Locator;
 
+    // Mobile link section 
+    private readonly mobileLabelSection: Locator;
+    private readonly mobileLabels: Locator;
+
+
 
 
 
@@ -202,6 +207,10 @@ export class HomePage extends BasePage {
         this.dropdownField = this.page.locator("css=input#comboBox");
         this.dropdownSection = this.page.locator("css=div#dropdown");
         this.firstdropdownOption = this.page.locator("css=div#dropdown div").first();
+
+        // Mobile Label Section 
+        this.mobileLabelSection = this.page.locator("css=div#mobiles h4");
+        this.mobileLabels = this.page.locator("css=div#mobiles label");
     }
 
 
@@ -560,13 +569,20 @@ export class HomePage extends BasePage {
 
     }
 
+    async mobileLabelsFunction(): Promise<void> {
+        let sectionTitle: string = (await this.mobileLabelSection.innerText())!.trim();
+        console.log(`SECTION :-  ${sectionTitle ?? "No Section title was found"}`)
 
-
-
-
-
-
+        let fetchedMobileLabels = await this.mobileLabels.allTextContents();
+        fetchedMobileLabels.forEach(label => {
+            console.log(`Fetched mobile Labels :- ${label}`);
+        });
+        console.table(fetchedMobileLabels);
+    }
 }
+
+
+
 
 
 
