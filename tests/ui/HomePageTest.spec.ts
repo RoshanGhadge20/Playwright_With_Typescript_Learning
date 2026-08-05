@@ -94,5 +94,8 @@ test.describe("All HomePage Interaction Individual Tests", () => {
     test("Working with the mobile label Section", async ({ homePage }) => {
         await homePage.mobileLabelsFunction();
     });
+    test("Working with the laptop link Section", async ({ homePage }) => {
+        await homePage.laptopLinkFunction();
+    });
 
 });
