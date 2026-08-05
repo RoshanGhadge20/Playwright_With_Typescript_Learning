@@ -20,7 +20,7 @@ export const test = base.extend<pageFixture>(
         },
 
         // Home Page 
-        homePage: async ({ page }, use) => {
+        homePage: async ({ page, request }, use) => {
             await page.goto(ENV.BASEURL_HOMEPAGE, { waitUntil: 'networkidle' });
             await use(new HomePage(page));
             await page.close();

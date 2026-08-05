@@ -1,8 +1,10 @@
-import { Page, test, expect, Locator, BrowserContext } from '@playwright/test'
+import { Page, test, expect, Locator, BrowserContext, Request } from '@playwright/test'
 import { BasePage } from '../pages/BasePage';
 import { validationMessage, roles } from '../config/enum';
 import { Footer } from './components/Footer';
 import { execPath } from 'node:process';
+import { request } from 'node:http';
+import { Url } from 'node:url';
 
 export class HomePage extends BasePage {
 
@@ -87,21 +89,24 @@ export class HomePage extends BasePage {
     private readonly leftSlider: Locator;
     private readonly rightSlider: Locator;
 
-    // SVG Section 
+    // SVG Section
     private readonly svgContainer: Locator;
     private readonly svgContainerCircle: Locator
     private readonly svgContainerRect: Locator
     private readonly svgContainerPolygon: Locator
 
-    // Scrolling dropdown section 
+    // Scrolling dropdown section
     private readonly dropdownField: Locator;
     private readonly dropdownSection: Locator;
     private readonly firstdropdownOption: Locator;
 
-    // Mobile link section 
+    // Mobile link section
     private readonly mobileLabelSection: Locator;
     private readonly mobileLabels: Locator;
 
+    // Laptop Link Section 
+    private readonly laptopLinkSection: Locator;
+    private readonly laptoplinks: Locator;
 
 
 
@@ -211,6 +216,10 @@ export class HomePage extends BasePage {
         // Mobile Label Section 
         this.mobileLabelSection = this.page.locator("css=div#mobiles h4");
         this.mobileLabels = this.page.locator("css=div#mobiles label");
+
+        // Laptop label section
+        this.laptopLinkSection = this.page.locator("css=div#laptops h4");
+        this.laptoplinks = this.page.locator("css=div#laptops a");
     }
 
 
@@ -578,6 +587,24 @@ export class HomePage extends BasePage {
             console.log(`Fetched mobile Labels :- ${label}`);
         });
         console.table(fetchedMobileLabels);
+    }
+
+    async laptopLinkFunction(): Promise<void> {
+
+        let sectionTitle: string = (await this.laptopLinkSection.innerText())!.trim();
+        console.log(`SECTION :- ${sectionTitle}`);
+        let numberOfLaptopLabels = await this.laptoplinks.count();
+        for (let i = 0; i < numberOfLaptopLabels; i++) {
+            const fetchedLaptopLink: string | null = await this.laptoplinks.nth(i).getAttribute("href");
+            if (fetchedLaptopLink) {
+                const response = await this.page.request.get(fetchedLaptopLink);
+                console.log(`Response of ${fetchedLaptopLink} is ${response.status()}`);
+            }
+            else {
+                console.log('unable to fetch the URL and its response')
+            }
+        }
+
     }
 }
 
