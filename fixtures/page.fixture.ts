@@ -13,7 +13,7 @@ type pageFixture = {
 export const test = base.extend<pageFixture>(
     {
         // Login page 
-        loginPage: async ({ page }, use) => {
+        loginPage: async ({ page, request }, use) => {
             await page.goto(ENV.BASEURL_LOGINPAGE, { waitUntil: 'networkidle' })
             await use(new LoginPage(page));
             await page.close();

@@ -97,5 +97,8 @@ test.describe("All HomePage Interaction Individual Tests", () => {
     test("Working with the laptop link Section", async ({ homePage }) => {
         await homePage.laptopLinkFunction();
     });
+    test("Working with the broken link Section", async ({ homePage }) => {
+        await homePage.brokenlinksSection();
+    });
 
 });

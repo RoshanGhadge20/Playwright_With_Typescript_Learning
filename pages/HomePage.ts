@@ -5,6 +5,7 @@ import { Footer } from './components/Footer';
 import { execPath } from 'node:process';
 import { request } from 'node:http';
 import { Url } from 'node:url';
+import { asyncWrapProviders } from 'node:async_hooks';
 
 export class HomePage extends BasePage {
 
@@ -108,6 +109,9 @@ export class HomePage extends BasePage {
     private readonly laptopLinkSection: Locator;
     private readonly laptoplinks: Locator;
 
+    // Broken Links Section
+    private readonly brokenLinkSection: Locator;
+    private readonly brokenLinks: Locator;
 
 
 
@@ -220,6 +224,10 @@ export class HomePage extends BasePage {
         // Laptop label section
         this.laptopLinkSection = this.page.locator("css=div#laptops h4");
         this.laptoplinks = this.page.locator("css=div#laptops a");
+
+        // Broken Link Section 
+        this.brokenLinkSection = this.page.locator("css=#broken-links h4");
+        this.brokenLinks = this.page.locator("css=#broken-links a");
     }
 
 
@@ -580,8 +588,9 @@ export class HomePage extends BasePage {
 
     async mobileLabelsFunction(): Promise<void> {
         let sectionTitle: string = (await this.mobileLabelSection.innerText())!.trim();
-        console.log(`SECTION :-  ${sectionTitle ?? "No Section title was found"}`)
-
+        if (sectionTitle) {
+            console.log(`SECTION :-  ${sectionTitle ?? "No Section title was found"}`)
+        }
         let fetchedMobileLabels = await this.mobileLabels.allTextContents();
         fetchedMobileLabels.forEach(label => {
             console.log(`Fetched mobile Labels :- ${label}`);
@@ -590,9 +599,10 @@ export class HomePage extends BasePage {
     }
 
     async laptopLinkFunction(): Promise<void> {
-
         let sectionTitle: string = (await this.laptopLinkSection.innerText())!.trim();
-        console.log(`SECTION :- ${sectionTitle}`);
+        if (sectionTitle) {
+            console.log(`SECTION :- ${sectionTitle}`);
+        }
         let numberOfLaptopLabels = await this.laptoplinks.count();
         for (let i = 0; i < numberOfLaptopLabels; i++) {
             const fetchedLaptopLink: string | null = await this.laptoplinks.nth(i).getAttribute("href");
@@ -603,6 +613,30 @@ export class HomePage extends BasePage {
             else {
                 console.log('unable to fetch the URL and its response')
             }
+        }
+
+    }
+
+    async brokenlinksSection(): Promise<void> {
+        let sectiontitle: string | null = await this.brokenLinkSection.textContent();
+        if (sectiontitle) {
+            console.log(`Broken link section ${sectiontitle}`);
+        }
+        let countofLinks: number = await this.brokenLinks.count();
+        for (let i = 0; i < countofLinks; i++) {
+            let link: string | null = await this.brokenLinks.nth(i).getAttribute('href');
+            let text: string = (await this.brokenLinks.nth(i).textContent())!.trim();
+            const expectedStatus: number = Number(text.match(/\d+/)?.[0]);
+            if (link) {
+                const response = await this.page.request.get(link);
+                const actualStatus = await response.status();
+                await expect(actualStatus).toBe(expectedStatus);
+                console.log(`${expectedStatus} :- URL :- ${link} :- Status ${response.status()} Result :- ${actualStatus === expectedStatus ? "PASS ✅" : "FAIL ❌"} `);
+            }
+            else {
+                console.log(`No links found`);
+            }
+
         }
 
     }
