@@ -113,6 +113,10 @@ export class HomePage extends BasePage {
     private readonly brokenLinkSection: Locator;
     private readonly brokenLinks: Locator;
 
+    // Visitors Section
+    private readonly visitorSection: Locator;
+    private readonly visitorCount: Locator;
+
 
 
     constructor(page: Page) {
@@ -228,6 +232,10 @@ export class HomePage extends BasePage {
         // Broken Link Section 
         this.brokenLinkSection = this.page.locator("css=#broken-links h4");
         this.brokenLinks = this.page.locator("css=#broken-links a");
+
+        // Visitors Section
+        this.visitorSection = this.page.getByText('Visitors');
+        this.visitorCount = this.page.locator('css=span#Stats1_totalCount');
     }
 
 
@@ -637,6 +645,22 @@ export class HomePage extends BasePage {
                 console.log(`No links found`);
             }
 
+        }
+
+    }
+
+    async workingWithVisitorsSection(): Promise<void> {
+        let sectionTitle = await this.visitorSection.textContent();
+        console.log(`Visitors Section Title :- ${sectionTitle}`);
+        let visitorsCount = await this.visitorCount.textContent();
+        await this.page.reload();
+        await this.page.waitForLoadState('networkidle');
+        let updatedVistorCount = await this.visitorCount.textContent();
+        if (visitorsCount === updatedVistorCount) {
+            console.log(`Before and  After refreshing visitors count remains same :- ${visitorsCount}`);
+        }
+        else {
+            console.log(`Before and After refreshing visitors count does not match. Before:- ${visitorsCount} & After:- ${updatedVistorCount}`);
         }
 
     }
