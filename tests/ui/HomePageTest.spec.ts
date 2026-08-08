@@ -85,20 +85,29 @@ test.describe("All HomePage Interaction Individual Tests", () => {
     test("Working with the SVG Section", async ({ homePage }) => {
         await homePage.svgSection();
     });
+
     test("Working with the Footer Section", async ({ homePage }) => {
         await homePage.handlignFooterSection();
     });
+
     test("Working with the scrolling dropdown Section", async ({ homePage }) => {
         await homePage.scrollingDropdownSection();
     });
+
     test("Working with the mobile label Section", async ({ homePage }) => {
         await homePage.mobileLabelsFunction();
     });
+
     test("Working with the laptop link Section", async ({ homePage }) => {
         await homePage.laptopLinkFunction();
     });
+
     test("Working with the broken link Section", async ({ homePage }) => {
         await homePage.brokenlinksSection();
+    });
+
+    test("Working with the visitors section", async ({ homePage }) => {
+        await homePage.workingWithVisitorsSection();
     });
 
 });
