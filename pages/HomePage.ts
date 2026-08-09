@@ -6,6 +6,8 @@ import { execPath } from 'node:process';
 import { request } from 'node:http';
 import { Url } from 'node:url';
 import { asyncWrapProviders } from 'node:async_hooks';
+import * as allure from "allure-js-commons";
+import { ContentType } from "allure-js-commons";
 
 export class HomePage extends BasePage {
 
@@ -650,19 +652,36 @@ export class HomePage extends BasePage {
     }
 
     async workingWithVisitorsSection(): Promise<void> {
-        let sectionTitle = await this.visitorSection.textContent();
-        console.log(`Visitors Section Title :- ${sectionTitle}`);
-        let visitorsCount = await this.visitorCount.textContent();
-        await this.page.reload();
-        await this.page.waitForLoadState('networkidle');
-        let updatedVistorCount = await this.visitorCount.textContent();
-        if (visitorsCount === updatedVistorCount) {
-            console.log(`Before and  After refreshing visitors count remains same :- ${visitorsCount}`);
-        }
-        else {
-            console.log(`Before and After refreshing visitors count does not match. Before:- ${visitorsCount} & After:- ${updatedVistorCount}`);
-        }
 
+        let visitorsCount: number;
+        let updatedVisitorCount: number;
+
+        await test.step("First Fetching the title of section and printing it ", async () => {
+            let sectionTitle: string = (await this.visitorSection.textContent())!.trim();
+            console.log(`Visitors Section Title :- ${sectionTitle}`);
+        });
+        await test.step("Fetching the count of visitors section : ", async () => {
+            visitorsCount = Number(await this.visitorCount.textContent());
+            const beforeScreenshot = await this.page.screenshot({ fullPage: true });
+            await allure.attachment('Before Refresh', beforeScreenshot, ContentType.PNG);
+        });
+        await test.step("Reloading the page again: ", async () => {
+            await this.page.reload();
+            await this.page.waitForLoadState('networkidle');
+        });
+        await test.step("Fetching the updated visitors Count: ", async () => {
+            updatedVisitorCount = Number(await this.visitorCount.textContent());
+            const afterScreenshot = await this.page.screenshot({ fullPage: true });
+            await allure.attachment('After Refresh', afterScreenshot, ContentType.PNG);
+        });
+        await test.step("Comparing the before and after page refresh count and printing it:", async () => {
+            if (visitorsCount === updatedVisitorCount) {
+                console.log(`Before and  After refreshing visitors count remains same :- ${visitorsCount}`);
+            }
+            else {
+                console.log(`Before and After refreshing visitors count does not match. Before:- ${visitorsCount} & After:- ${updatedVisitorCount}`);
+            }
+        });
     }
 }
 
