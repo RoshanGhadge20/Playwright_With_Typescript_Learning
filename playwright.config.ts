@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
+import { allureEnvironmentDetails } from './config/allureEnvironmentDetails';
 
 /**
  * Read environment variables from file.
@@ -16,7 +17,7 @@ import path from 'path';
 
 /* // .env file path configuration
 dotenv.config({ path: path.resolve(__dirname, '.env') }); */
-
+allureEnvironmentDetails();
 
 export default defineConfig({
   testDir: './tests',

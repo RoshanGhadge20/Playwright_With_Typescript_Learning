@@ -1,4 +1,4 @@
-import { Page, test, expect, Locator, BrowserContext, Request } from '@playwright/test'
+import { Page, test, expect, Locator, BrowserContext, Request, APIResponse } from '@playwright/test'
 import { BasePage } from '../pages/BasePage';
 import { validationMessage, roles } from '../config/enum';
 import { Footer } from './components/Footer';
@@ -6,6 +6,8 @@ import { execPath } from 'node:process';
 import { request } from 'node:http';
 import { Url } from 'node:url';
 import { asyncWrapProviders } from 'node:async_hooks';
+import * as allure from "allure-js-commons";
+import { ContentType } from "allure-js-commons";
 
 export class HomePage extends BasePage {
 
@@ -564,105 +566,180 @@ export class HomePage extends BasePage {
     }
 
     async svgSection(): Promise<void> {
-        console.log("Working with svg section");
-        await expect(this.svgContainerCircle).toBeVisible();
-        console.log("SVG Circle is visible");
-        let fillValueCircle: string | null = await this.svgContainerCircle.getAttribute('fill');
-        console.log(`Fill Value of the SVG Circle is ${fillValueCircle}`);
-        await expect(this.svgContainerPolygon).toBeVisible();
-        console.log("SVG Polygon is visible");
-        let fillValuePolygon: string | null = await this.svgContainerPolygon.getAttribute('fill');
-        console.log(`Fill Value of the SVG Circle is ${fillValuePolygon}`);
-        await expect(this.svgContainerRect).toBeVisible();
-        console.log("SVG Rect is visible");
-        let fillValueRect: string | null = await this.svgContainerRect.getAttribute('fill');
-        console.log(`Fill Value of the SVG Circle is ${fillValueRect}`);
+        let fillValueCircle: string | null;
+        let fillValuePolygon: string | null;
+        let fillValueRect: string | null;
+
+        await test.step("Verifying that svg section is visible:", async () => {
+            console.log("Working with svg section");
+            await expect(this.svgContainerCircle).toBeVisible();
+            const svgSectionScreenshot = await this.page.screenshot({ fullPage: true });
+            await allure.attachment("SVG SECTION:", svgSectionScreenshot, ContentType.PNG);
+        });
+
+        await test.step("Fetching the svg circle fill attribute and printing it:", async () => {
+            console.log("SVG Circle is visible");
+            fillValueCircle = await this.svgContainerCircle.getAttribute('fill');
+            console.log(`Fill Value of the SVG Circle is ${fillValueCircle}`);
+        })
+
+        await test.step("Fetching the svg polygon fill attribute and printing it:", async () => {
+            await expect(this.svgContainerPolygon).toBeVisible();
+            console.log("SVG Polygon is visible");
+            fillValuePolygon = await this.svgContainerPolygon.getAttribute('fill');
+            console.log(`Fill Value of the SVG Circle is ${fillValuePolygon}`);
+        });
+
+        await test.step("Fetching the svg Rect fill attribute and printing it:", async () => {
+            await expect(this.svgContainerRect).toBeVisible();
+            console.log("SVG Rect is visible");
+            fillValueRect = await this.svgContainerRect.getAttribute('fill');
+            console.log(`Fill Value of the SVG Circle is ${fillValueRect}`);
+        });
     }
 
     async handlignFooterSection(): Promise<void> {
-        let footerText = await this.footer.footerSectionControl();
-        console.log(`Footer text ${footerText}`);
+        let footerText: string;
+        footerText = await this.footer.footerSectionControl();
+        await test.step("Fetching the footer text from the footerSectionContorl:", async () => {
+            if (footerText !== undefined && footerText !== null) {
+                console.log(`Footer text ${footerText}`);
+            }
+            else {
+                console.log(`Unable to fetch the the details correctly`);
+            }
+        });
     }
 
     async scrollingDropdownSection(): Promise<void> {
-        await this.click(this.dropdownField);
-        await expect(this.dropdownSection).toBeVisible();
-        await expect(this.firstdropdownOption).toBeVisible();
-        await this.firstdropdownOption.click();
-        let inputValue = await this.dropdownField.inputValue();
-        console.log(`Input Value in the field is :- ${inputValue}`);
+        let inputValues: string;
+
+        await test.step("Clicking on the dropdown:", async () => {
+            await this.click(this.dropdownField);
+        });
+        await test.step("verifying that dropdown option section is visible:", async () => {
+            await expect(this.dropdownSection).toBeVisible();
+            await expect(this.firstdropdownOption).toBeVisible();
+        });
+        await test.step("Selecting the first option shown from the dropdown", async () => {
+            await this.firstdropdownOption.click();
+        });
+        await test.step("fetching the first selected input value from the dropdown", async () => {
+            inputValues = await this.dropdownField.inputValue();
+            console.log(`Input Value in the field is :- ${inputValues}`);
+        });
 
     }
 
     async mobileLabelsFunction(): Promise<void> {
-        let sectionTitle: string = (await this.mobileLabelSection.innerText())!.trim();
-        if (sectionTitle) {
-            console.log(`SECTION :-  ${sectionTitle ?? "No Section title was found"}`)
-        }
-        let fetchedMobileLabels = await this.mobileLabels.allTextContents();
-        fetchedMobileLabels.forEach(label => {
-            console.log(`Fetched mobile Labels :- ${label}`);
+        let sectionTitle: string;
+        let fetchedMobileLabels: string[];
+
+        sectionTitle = (await this.mobileLabelSection.innerText())!.trim();
+        await test.step("fetched the section title and printing it: ", async () => {
+            if (sectionTitle) {
+                console.log(`SECTION :-  ${sectionTitle ?? "No Section title was found"}`)
+            }
         });
-        console.table(fetchedMobileLabels);
+        fetchedMobileLabels = await this.mobileLabels.allTextContents();
+        await test.step("Fetched the all of mobile labels :", async () => {
+            fetchedMobileLabels.forEach(label => {
+                console.log(`Fetched mobile Labels :- ${label}`);
+            });
+            console.table(fetchedMobileLabels);
+        });
     }
 
     async laptopLinkFunction(): Promise<void> {
-        let sectionTitle: string = (await this.laptopLinkSection.innerText())!.trim();
-        if (sectionTitle) {
-            console.log(`SECTION :- ${sectionTitle}`);
-        }
-        let numberOfLaptopLabels = await this.laptoplinks.count();
-        for (let i = 0; i < numberOfLaptopLabels; i++) {
-            const fetchedLaptopLink: string | null = await this.laptoplinks.nth(i).getAttribute("href");
-            if (fetchedLaptopLink) {
-                const response = await this.page.request.get(fetchedLaptopLink);
-                console.log(`Response of ${fetchedLaptopLink} is ${response.status()}`);
-            }
-            else {
-                console.log('unable to fetch the URL and its response')
-            }
-        }
+        let sectionTitle: string;
+        let numberOfLaptopLabels: number;
+        let fetchedLaptopLink: string | null;
 
+        sectionTitle = (await this.laptopLinkSection.innerText())!.trim();
+        await test.step("Fetched section title and printing it: ", async () => {
+            if (sectionTitle) {
+                console.log(`SECTION :- ${sectionTitle}`);
+            }
+        });
+        numberOfLaptopLabels = await this.laptoplinks.count();
+        await test.step("Fetched the number of laptop labels: ", async () => {
+            console.log(`Number of laptop labels are ${numberOfLaptopLabels}`);
+        })
+        await test.step("Iterating through the all labels and fetching the response of it:", async () => {
+            for (let i = 0; i < numberOfLaptopLabels; i++) {
+                fetchedLaptopLink = await this.laptoplinks.nth(i).getAttribute("href");
+                if (fetchedLaptopLink) {
+                    const response: APIResponse = await this.page.request.get(fetchedLaptopLink);
+                    console.log(`Response of ${fetchedLaptopLink} is ${response.status()}`);
+                }
+                else {
+                    console.log('unable to fetch the URL and its response')
+                }
+            }
+        });
     }
 
     async brokenlinksSection(): Promise<void> {
-        let sectiontitle: string | null = await this.brokenLinkSection.textContent();
-        if (sectiontitle) {
-            console.log(`Broken link section ${sectiontitle}`);
-        }
-        let countofLinks: number = await this.brokenLinks.count();
-        for (let i = 0; i < countofLinks; i++) {
-            let link: string | null = await this.brokenLinks.nth(i).getAttribute('href');
-            let text: string = (await this.brokenLinks.nth(i).textContent())!.trim();
-            const expectedStatus: number = Number(text.match(/\d+/)?.[0]);
-            if (link) {
-                const response = await this.page.request.get(link);
-                const actualStatus = await response.status();
-                await expect(actualStatus).toBe(expectedStatus);
-                console.log(`${expectedStatus} :- URL :- ${link} :- Status ${response.status()} Result :- ${actualStatus === expectedStatus ? "PASS ✅" : "FAIL ❌"} `);
-            }
-            else {
-                console.log(`No links found`);
-            }
+        let sectiontitle: string | null;
+        let countofLinks: number;
 
-        }
+        await test.step("Fetching the section title :", async () => {
+            sectiontitle = await this.brokenLinkSection.textContent();
+            if (sectiontitle) {
+                console.log(`Broken link section ${sectiontitle}`);
+            }
+        });
 
+        await test.step("Fetching the count of broken links and verifying status:", async () => {
+            countofLinks = await this.brokenLinks.count();
+            for (let i = 0; i < countofLinks; i++) {
+                let link: string | null = await this.brokenLinks.nth(i).getAttribute('href');
+                let text: string = (await this.brokenLinks.nth(i).textContent())!.trim();
+                const expectedStatus: number = Number(text.match(/\d+/)?.[0]);
+                if (link) {
+                    const response = await this.page.request.get(link);
+                    const actualStatus = await response.status();
+                    await expect(actualStatus).toBe(expectedStatus);
+                    console.log(`${expectedStatus} :- URL :- ${link} :- Status ${response.status()} Result :- ${actualStatus === expectedStatus ? "PASS ✅" : "FAIL ❌"} `);
+                }
+                else {
+                    console.log(`No links found`);
+                }
+            }
+        });
     }
 
     async workingWithVisitorsSection(): Promise<void> {
-        let sectionTitle = await this.visitorSection.textContent();
-        console.log(`Visitors Section Title :- ${sectionTitle}`);
-        let visitorsCount = await this.visitorCount.textContent();
-        await this.page.reload();
-        await this.page.waitForLoadState('networkidle');
-        let updatedVistorCount = await this.visitorCount.textContent();
-        if (visitorsCount === updatedVistorCount) {
-            console.log(`Before and  After refreshing visitors count remains same :- ${visitorsCount}`);
-        }
-        else {
-            console.log(`Before and After refreshing visitors count does not match. Before:- ${visitorsCount} & After:- ${updatedVistorCount}`);
-        }
 
+        let visitorsCount: number;
+        let updatedVisitorCount: number;
+
+        await test.step("First Fetching the title of section and printing it ", async () => {
+            let sectionTitle: string = (await this.visitorSection.textContent())!.trim();
+            console.log(`Visitors Section Title :- ${sectionTitle}`);
+        });
+        await test.step("Fetching the count of visitors section : ", async () => {
+            visitorsCount = Number(await this.visitorCount.textContent());
+            const beforeScreenshot = await this.page.screenshot({ fullPage: true });
+            await allure.attachment('Before Refresh', beforeScreenshot, ContentType.PNG);
+        });
+        await test.step("Reloading the page again: ", async () => {
+            await this.page.reload();
+            await this.page.waitForLoadState('networkidle');
+        });
+        await test.step("Fetching the updated visitors Count: ", async () => {
+            updatedVisitorCount = Number(await this.visitorCount.textContent());
+            const afterScreenshot = await this.page.screenshot({ fullPage: true });
+            await allure.attachment('After Refresh', afterScreenshot, ContentType.PNG);
+        });
+        await test.step("Comparing the before and after page refresh count and printing it:", async () => {
+            if (visitorsCount === updatedVisitorCount) {
+                console.log(`Before and  After refreshing visitors count remains same :- ${visitorsCount}`);
+            }
+            else {
+                console.log(`Before and After refreshing visitors count does not match. Before:- ${visitorsCount} & After:- ${updatedVisitorCount}`);
+            }
+        });
     }
 }
 

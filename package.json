@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test:loginPage": "set ENV=test && npx playwright test LoginPageTest.spec.ts --project=chrome --headed",
-    "test:homePage": "set ENV=test && npx playwright test HomePageTest.spec.ts --project=chrome --headed"
+    "test:homePage": "set ENV=test && npx playwright test HomePageTest.spec.ts --project=chrome --headed",
+    "clean:allure": "rimraf allure-results",
+    "report:generate": "allure generate allure-results --clean -o allure-report",
+    "report:open": "allure open allure-report"
   },
   "keywords": [],
   "author": "",

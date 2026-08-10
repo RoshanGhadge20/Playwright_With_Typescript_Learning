@@ -1,8 +1,15 @@
 import { test } from './../../fixtures/page.fixture'
 import { LoginPage, HomePage } from '../../pages';
+import * as allure from "allure-js-commons";
 
 
 test.describe("All HomePage Interaction Individual Tests", () => {
+    allure.displayName(" Practice Test Authentication");
+    allure.owner("Roshan Ghadge");
+    allure.tags("Web interface", "Authentication", "GUI Handling");
+    allure.severity("Major");
+
+
     test("Verifying the page section title of the", async ({ homePage }) => {
         await homePage.verifyTitleOfGUISection();
     })
