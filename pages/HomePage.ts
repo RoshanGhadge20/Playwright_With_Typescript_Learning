@@ -528,41 +528,89 @@ export class HomePage extends BasePage {
     }
 
     async workingWithMouseSection(): Promise<void> {
-        await this.pointMeButton.hover();
-        await expect(this.suggestedOptions).toHaveCount(2);
-        let suggestedOptionText: string[] = await this.suggestedOptions.allTextContents();
-        for (const suggestedOption of suggestedOptionText) {
-            console.log(`Suggested Option is :- ${suggestedOption}`)
-        }
+
+        let suggestedOptionText: string[];
+
+        await test.step("Firstly verifying the element is visible before hovering the mosue:", async (testInfo) => {
+            await expect(this.pointMeButton).toBeVisible();
+            await testInfo.attach('BEFORE HOVERING SCREENSHOT', {
+                body: await this.page.screenshot({ fullPage: true }),
+                contentType: 'image/png'
+            });
+        });
+
+        await test.step("Hovering mouse over the element: ", async () => {
+            await this.pointMeButton.hover();
+        });
+
+        await test.step("Asserting the count of options:", async () => {
+            await expect(this.suggestedOptions).toHaveCount(2);
+            console.log(`Count of options visibles are exact 2`);
+        })
+
+        await test.step('Fetching all the suggested options and iterating through it: ', async (testInfo) => {
+            suggestedOptionText = await this.suggestedOptions.allTextContents();
+            await testInfo.attach("AFTER HOVERING SCREENSHOT", {
+                body: await this.page.screenshot({ fullPage: true }),
+                contentType: 'image/png'
+            });
+            for (const suggestedOption of suggestedOptionText) {
+                console.log(`Suggested Option is :- ${suggestedOption}`)
+            };
+        });
     }
 
     async workingWithDoubleClick(): Promise<void> {
+
         let field2InputText: string;
-        field2InputText = await this.field2.inputValue();
-        console.log(`Current value of the field2 input after double click ${field2InputText}`);
-        console.log('Now performing the double click');
-        await this.doubleClickButton.dblclick();
-        field2InputText = await this.field2.inputValue();
-        console.log(`Current value of the field2 input after double click ${field2InputText}`);
+
+        await test.step("Fetching the input value from the field2", async () => {
+            field2InputText = await this.field2.inputValue();
+            console.log(`Current value of the field2 input after double click ${field2InputText}`);
+        });
+
+        test.step("Now performing the double click on element:", async () => {
+            console.log('Now performing the double click');
+            await this.doubleClickButton.dblclick();
+        });
+
+        await test.step("Fetching the input value from the field2 again after double click:", async () => {
+            field2InputText = await this.field2.inputValue();
+            console.log(`Current value of the field2 input after double click ${field2InputText}`);
+        });
     }
 
     async dragAndDrop(): Promise<void> {
-        await this.dragSection.dragTo(this.dropSection);
-        console.log("Item has been dragged and dropped successfully");
+        await test.step("Performing drag-drop with playwright defautl method:", async () => {
+            await this.dragSection.dragTo(this.dropSection);
+            console.log("Item has been dragged and dropped successfully");
+        });
     }
 
     async sliderBoard(): Promise<void> {
-        const initialPriceRange: string = await this.sliderPriceRange.inputValue();
-        console.log("Initial price range:", initialPriceRange);
-        await this.page.evaluate(() => {
-            const jq = (window as any).$;
-            jq('#slider-range').slider('values', [150, 350]);
+
+        let initialPriceRange: string;
+        let updatedValues: number[];
+
+        await test.step("Fetching the initial of price range:", async () => {
+            initialPriceRange = await this.sliderPriceRange.inputValue();
+            console.log("Initial price range:", initialPriceRange);
+        })
+
+        await test.step("Moving the slider by using page.evaluate():", async () => {
+            await this.page.evaluate(() => {
+                const jq = (window as any).$;
+                jq('#slider-range').slider('values', [150, 350]);
+            });
         });
-        const updatedValues = await this.page.evaluate<number[]>(() => {
-            const jq = (window as any).$;
-            return jq('#slider-range').slider('values');
+
+        await test.step("Fetching the updated values with page.evaluate():", async () => {
+            updatedValues = await this.page.evaluate<number[]>(() => {
+                const jq = (window as any).$;
+                return jq('#slider-range').slider('values');
+            });
+            console.log("Updated values:", updatedValues);
         });
-        console.log("Updated values:", updatedValues);
     }
 
     async svgSection(): Promise<void> {
