@@ -4,15 +4,20 @@ import * as allure from "allure-js-commons";
 
 
 test.describe("All HomePage Interaction Individual Tests", () => {
+    test.setTimeout(240000);
+
     allure.displayName(" Practice Test Authentication");
     allure.owner("Roshan Ghadge");
     allure.tags("Web interface", "Authentication", "GUI Handling");
     allure.severity("Major");
 
+    test("Verifying the each section of the page", async ({ homePage }) => {
+        await homePage.navigateToEachSections();
+    });
 
     test("Verifying the page section title of the", async ({ homePage }) => {
         await homePage.verifyTitleOfGUISection();
-    })
+    });
 
     test("Fill Basic details into Data entry form", async ({ homePage }) => {
         await homePage.fillBasicDetails("Roshan Ghadge", "roshanghadge20@gmail.com", 8767002000n, "Nerul Navi Mumbai");
@@ -20,7 +25,7 @@ test.describe("All HomePage Interaction Individual Tests", () => {
 
     test("Working with date picker 1", async ({ homePage }) => {
         await homePage.handlingDatePicker1(new Date("2026-04-01"));
-    })
+    });
 
     test("Working with date picker 2", async ({ homePage }) => {
         await homePage.handlingDatePicker2("Jan", "2024", 4)

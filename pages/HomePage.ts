@@ -4,15 +4,20 @@ import { validationMessage, roles } from '../config/enum';
 import { Footer } from './components/Footer';
 import { execPath } from 'node:process';
 import { request } from 'node:http';
-import { Url } from 'node:url';
+import { URL, Url } from 'node:url';
 import { asyncWrapProviders } from 'node:async_hooks';
 import * as allure from "allure-js-commons";
 import { ContentType } from "allure-js-commons";
+import { url } from 'node:inspector';
 
 export class HomePage extends BasePage {
 
     // Reading the components
     readonly footer: Footer;
+
+
+    // HomePage section 
+    private readonly sections: Locator;
 
     // Data Entry Form Locators
     private readonly dataEntryFormTitle: Locator;
@@ -121,12 +126,17 @@ export class HomePage extends BasePage {
 
 
 
+
+
     constructor(page: Page) {
         super(page);
 
         // Reading components > composition 
         this.footer = new Footer(page);
 
+
+        // Homepage section elements
+        this.sections = this.page.locator("css=div#PageList2 div.widget-content ul li a");
 
         // Data Entry Form Locators
         this.dataEntryFormTitle = this.page.getByText("Data Entry Form");
@@ -240,6 +250,31 @@ export class HomePage extends BasePage {
         this.visitorCount = this.page.locator('css=span#Stats1_totalCount');
     }
 
+
+    async navigateToEachSections(): Promise<void> {
+        let sectionTitle: string | null;
+        let countOfSections: number;
+        let urlOfSection: string;
+        let homePageURL: string;
+
+        countOfSections = await this.sections.count();
+
+        for (let i = 0; i < countOfSections; i++) {
+            sectionTitle = (await this.sections.nth(i).textContent())!.trim();
+            homePageURL = (await this.page.url())!;
+            if (sectionTitle !== null) {
+                urlOfSection = (await this.sections.nth(i).getAttribute('href'))!;
+                await this.page.goto(urlOfSection, { waitUntil: 'load' });
+                console.table(`Printing the sections title as :- ${sectionTitle} and URL:- ${urlOfSection}`);
+                await this.page.goto(homePageURL, { waitUntil: 'networkidle' });
+            }
+            else {
+                console.error('Unable to fetch the URL of page');
+            }
+        }
+
+
+    }
 
     async verifyTitleOfGUISection(): Promise<void> {
         await test.step("Fetching the text Content of page title", async () => {
@@ -789,6 +824,8 @@ export class HomePage extends BasePage {
             }
         });
     }
+
+
 }
 
 
