@@ -222,7 +222,7 @@ export class HomePage extends BasePage {
         this.leftSlider = this.page.locator("css=div#slider-range span").first();
         this.rightSlider = this.page.locator("xpath=//div[@id='slider - range']/span[2]");
 
-        // SVG Container 
+        // SVG Container
         this.svgContainer = this.page.locator("css=div.svg-container");
         this.svgContainerCircle = this.page.locator("css=div.svg-container svg circle");
         this.svgContainerRect = this.page.locator("css=div.svg-container svg rect");
@@ -252,28 +252,42 @@ export class HomePage extends BasePage {
 
 
     async navigateToEachSections(): Promise<void> {
-        let sectionTitle: string | null;
+        let sectionTitle: string;
         let countOfSections: number;
         let urlOfSection: string;
         let homePageURL: string;
 
-        countOfSections = await this.sections.count();
+        countOfSections = await test.step("Fetching the count of sections firstly: ", async (testInfo) => {
+            await testInfo.attach('Each Section', {
+                body: await this.page.screenshot({ fullPage: false }),
+                contentType: 'image/png'
+            });
+            return await this.sections.count();
+        });
 
-        for (let i = 0; i < countOfSections; i++) {
-            sectionTitle = (await this.sections.nth(i).textContent())!.trim();
-            homePageURL = (await this.page.url())!;
-            if (sectionTitle !== null) {
-                urlOfSection = (await this.sections.nth(i).getAttribute('href'))!;
-                await this.page.goto(urlOfSection, { waitUntil: 'load' });
-                console.table(`Printing the sections title as :- ${sectionTitle} and URL:- ${urlOfSection}`);
-                await this.page.goto(homePageURL, { waitUntil: 'networkidle' });
+        await test.step("Iterating through the each section and fetching the section title with link for each section: ", async () => {
+            for (let i = 0; i < countOfSections; i++) {
+                sectionTitle = (await this.sections.nth(i).textContent())!.trim();
+                homePageURL = (await this.page.url())!;
+                if (sectionTitle !== null) {
+                    urlOfSection = (await this.sections.nth(i).getAttribute('href'))!;
+                    await test.step(`Navigating to the url: ${urlOfSection}`, async (testInfo) => {
+                        await this.page.goto(urlOfSection, { waitUntil: 'load' });
+                        await testInfo.attach(`Section: ${sectionTitle} and URL: ${urlOfSection}`, {
+                            body: await this.page.screenshot({ fullPage: true }),
+                            contentType: 'image/png'
+                        });
+                    });
+                    console.table(`Printing the sections title as:- ${sectionTitle} and URL:- ${urlOfSection}`);
+                    await test.step("Again Navigating back to the homePage: ", async () => {
+                        await this.page.goto(homePageURL, { waitUntil: 'networkidle' });
+                    });
+                }
+                else {
+                    console.error('Unable to fetch the URL of page');
+                }
             }
-            else {
-                console.error('Unable to fetch the URL of page');
-            }
-        }
-
-
+        });
     }
 
     async verifyTitleOfGUISection(): Promise<void> {
