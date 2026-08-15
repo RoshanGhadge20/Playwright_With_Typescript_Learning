@@ -126,8 +126,6 @@ export class HomePage extends BasePage {
 
 
 
-
-
     constructor(page: Page) {
         super(page);
 
@@ -252,6 +250,8 @@ export class HomePage extends BasePage {
 
 
     async navigateToEachSections(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         let sectionTitle: string;
         let countOfSections: number;
         let urlOfSection: string;
@@ -288,9 +288,14 @@ export class HomePage extends BasePage {
                 }
             }
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
+
     }
 
     async verifyTitleOfGUISection(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step("Fetching the text Content of page title", async () => {
             let sectionTitle = await this.dataEntryFormTitle.textContent();
             if (sectionTitle?.trim() && sectionTitle !== null) {
@@ -302,9 +307,13 @@ export class HomePage extends BasePage {
                 console.log(`Section title is not as per expected - ${sectionTitle}`);
             }
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async fillBasicDetails(name: string, email: string, phoneNumber: bigint, address: string): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step(`Started to fill the basic details into form`, async () => {
             await this.fill(this.nameField, name.trim());
             await this.fill(this.emailField, email.trim());
@@ -343,16 +352,24 @@ export class HomePage extends BasePage {
             await expect(originalList).toEqual(newSortedList);
             console.log("Now Original list and sorted list both are equals");
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async handlingDatePicker1(date: Date): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step("Filling the date directly with input tag for date picker 1", async () => {
             await this.fill(this.datePicker1Field, date.toString());
             console.log(`selected date from the datepicker 1 is ${date}`);
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async handlingDatePicker2(month: string, year: string, date: number): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step("Clicking on date picker 2 and waiting for UI", async () => {
             await this.datePicker2Field.click();
             await this.datePickerUI.waitFor({ state: 'visible', timeout: 6000 });
@@ -363,9 +380,13 @@ export class HomePage extends BasePage {
             await this.page.locator(`.ui-datepicker-calendar tbody td a:text-is("${date}")`).click();
             console.log("Date has been selected");
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async checkingValidationMessageForDateField3(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step("Clicking on submit button of date picker 3", async () => {
             await this.datePicker3SubmitButton.click();
         });
@@ -373,9 +394,13 @@ export class HomePage extends BasePage {
             await expect(this.datePicker3ValidationMessage).toBeVisible();
             console.log("Date Picker Validation Message 3 is visilbe completely");
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async checkRangeBetweenDates(startDate: string, endDate: string): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step("Filling the start and end date into fields", async () => {
             await this.datePicker3StartDate.fill(startDate.toString());
             await this.datePicker3EndDate.fill(endDate.toString());
@@ -394,21 +419,33 @@ export class HomePage extends BasePage {
                 console.log(`unable to fetch the date range`);
             }
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async uploadSingleFile(fileToUpload: string): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step("Uploading the single file", async () => {
             await this.uploadSingleFileSection.setInputFiles(fileToUpload);
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async uploadMultipleFile(fileToUpload: string): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step("Uploading the multiple same files", async () => {
             await this.uploadMultipleFileSection.setInputFiles([fileToUpload, fileToUpload, fileToUpload]);
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async handlingSubscribeToSection(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step("Creating a new Page object and validating it with url", async () => {
             let parentPage = this.page;
             const [newPage] = await Promise.all([
@@ -419,10 +456,14 @@ export class HomePage extends BasePage {
             await expect(newPage).toHaveURL("https://testautomationpractice.blogspot.com/feeds/posts/default", { timeout: 6000 });
             await parentPage.bringToFront();
             console.log("Parent page is bringed to to front again");
-        })
+        });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async workingWithStaticWebTable(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step("Fetching the details of static table", async () => {
             let tableHeadingCount = await this.staticWebTableHeading.count();
             let tableDataCount = await this.staticWebTableData.count();
@@ -435,9 +476,13 @@ export class HomePage extends BasePage {
                 }
             }
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async workingWithDynamicWebTable(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step("fetching the details of table", async () => {
             let tableHeadingCount = await this.dynamicWebTableHeading.count();
             let tableDataCount = await this.dynamicWebTableData.count();
@@ -450,9 +495,13 @@ export class HomePage extends BasePage {
                 }
             }
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async workingWithPaginationWebTable(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         let countOfLoops: number;
         test.step("Fetching the count of pagination and iterating through it", async () => {
             countOfLoops = await this.paginationCount.count();
@@ -471,11 +520,13 @@ export class HomePage extends BasePage {
                 console.log(`===== ====== ===== ====`)
             }
         });
-
-
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async workingWithSearchField(input: string): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         test.step(`Input to be entered into the field is ${input}`, async () => {
             console.log(`Input parameter is ${input}`);
         });
@@ -495,9 +546,13 @@ export class HomePage extends BasePage {
                 console.log(`Printing the all results ${result}`);
             });
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async workingWithDynamicButtonField(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         test.step("Firstly verifying the initial state of the button again changing the state of button", async () => {
             let buttonState = await this.dynamicButtonField.textContent();
             console.log(`First Initiatl condition of the button is ${buttonState}`);
@@ -518,9 +573,13 @@ export class HomePage extends BasePage {
                 console.log(`Button is not yet into its initiatl setup stage`);
             }
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async workingWithAlerts(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         // Handling simple dialog
         this.page.on('dialog', async (dialog) => {
             if (dialog.type() === 'alert') {
@@ -574,9 +633,13 @@ export class HomePage extends BasePage {
         // console.log("Title is fetched from the popup and its validated correctly");
         await this.page.bringToFront();
         console.log("The main page is bringed to the front");
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async workingWithMouseSection(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
 
         let suggestedOptionText: string[];
 
@@ -607,9 +670,13 @@ export class HomePage extends BasePage {
                 console.log(`Suggested Option is :- ${suggestedOption}`)
             };
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async workingWithDoubleClick(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
 
         let field2InputText: string;
 
@@ -627,16 +694,24 @@ export class HomePage extends BasePage {
             field2InputText = await this.field2.inputValue();
             console.log(`Current value of the field2 input after double click ${field2InputText}`);
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async dragAndDrop(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         await test.step("Performing drag-drop with playwright defautl method:", async () => {
             await this.dragSection.dragTo(this.dropSection);
             console.log("Item has been dragged and dropped successfully");
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async sliderBoard(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
 
         let initialPriceRange: string;
         let updatedValues: number[];
@@ -660,9 +735,14 @@ export class HomePage extends BasePage {
             });
             console.log("Updated values:", updatedValues);
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async svgSection(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
+
         let fillValueCircle: string | null;
         let fillValuePolygon: string | null;
         let fillValueRect: string | null;
@@ -693,9 +773,13 @@ export class HomePage extends BasePage {
             fillValueRect = await this.svgContainerRect.getAttribute('fill');
             console.log(`Fill Value of the SVG Circle is ${fillValueRect}`);
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async handlignFooterSection(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         let footerText: string;
         footerText = await this.footer.footerSectionControl();
         await test.step("Fetching the footer text from the footerSectionContorl:", async () => {
@@ -706,9 +790,13 @@ export class HomePage extends BasePage {
                 console.log(`Unable to fetch the the details correctly`);
             }
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async scrollingDropdownSection(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         let inputValues: string;
 
         await test.step("Clicking on the dropdown:", async () => {
@@ -725,10 +813,13 @@ export class HomePage extends BasePage {
             inputValues = await this.dropdownField.inputValue();
             console.log(`Input Value in the field is :- ${inputValues}`);
         });
-
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async mobileLabelsFunction(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         let sectionTitle: string;
         let fetchedMobileLabels: string[];
 
@@ -745,9 +836,13 @@ export class HomePage extends BasePage {
             });
             console.table(fetchedMobileLabels);
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async laptopLinkFunction(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         let sectionTitle: string;
         let numberOfLaptopLabels: number;
         let fetchedLaptopLink: string | null;
@@ -774,9 +869,13 @@ export class HomePage extends BasePage {
                 }
             }
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async brokenlinksSection(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
         let sectiontitle: string | null;
         let countofLinks: number;
 
@@ -804,9 +903,13 @@ export class HomePage extends BasePage {
                 }
             }
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
     async workingWithVisitorsSection(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
 
         let visitorsCount: number;
         let updatedVisitorCount: number;
@@ -837,6 +940,8 @@ export class HomePage extends BasePage {
                 console.log(`Before and After refreshing visitors count does not match. Before:- ${visitorsCount} & After:- ${updatedVisitorCount}`);
             }
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
     }
 
 

@@ -11,6 +11,7 @@ test.describe("All HomePage Interaction Individual Tests", () => {
     allure.tags("Web interface", "Authentication", "GUI Handling");
     allure.severity("Major");
 
+
     test("Verifying the each section of the page", async ({ homePage }) => {
         await homePage.navigateToEachSections();
     });
