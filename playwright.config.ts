@@ -1,3 +1,16 @@
+// To remove the unnecessarily the console.log from node/ allure 
+const originalConsoleLog = console.log;
+console.log = (...args: unknown[]) => {
+  if (
+    typeof args[0] === 'string' &&
+    args[0].includes('no test runtime is found')
+  ) {
+    return; // swallow this specific noise
+  }
+  originalConsoleLog(...args);
+};
+
+
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
