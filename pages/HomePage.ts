@@ -124,6 +124,16 @@ export class HomePage extends BasePage {
     private readonly visitorSection: Locator;
     private readonly visitorCount: Locator;
 
+    // Form Section 
+    private readonly section1Field: Locator;
+    private readonly section1SubmitButton: Locator;
+    private readonly section2Field: Locator;
+    private readonly section2SubmitButton: Locator;
+    private readonly section3Field: Locator;
+    private readonly section3SubmitButton: Locator;
+    private readonly footerSection: Locator;
+    private readonly footerSectionLink: Locator;
+
 
 
     constructor(page: Page) {
@@ -246,6 +256,17 @@ export class HomePage extends BasePage {
         // Visitors Section
         this.visitorSection = this.page.getByText('Visitors');
         this.visitorCount = this.page.locator('css=span#Stats1_totalCount');
+
+        // Form Section 
+        this.section1Field = this.page.locator('#input1');
+        this.section1SubmitButton = this.page.locator('button#btn1');
+        this.section2Field = this.page.locator('#input2');
+        this.section2SubmitButton = this.page.locator('button#btn2');
+        this.section3Field = this.page.locator('#input3');
+        this.section3SubmitButton = this.page.locator('button#btn3');
+        this.footerSection = this.page.locator('#PageList1');
+        this.footerSectionLink = this.page.locator('div#PageList1 div.widget-content  ul li a');
+
     }
 
 
@@ -940,6 +961,53 @@ export class HomePage extends BasePage {
                 console.log(`Before and After refreshing visitors count does not match. Before:- ${visitorsCount} & After:- ${updatedVisitorCount}`);
             }
         });
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
+    }
+
+
+    async workingWithFormSection(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
+
+        let footerSectionTitle: string;
+        let countOfLinks: number;
+
+        await test.step("Working with the section 1", async () => {
+            await expect(this.section1Field).toBeVisible();
+            await this.section1Field.fill("Roshan Ghadge");
+            await expect(this.section1SubmitButton).toBeEnabled();
+            await this.section1SubmitButton.click();
+        });
+
+        await test.step("Working with the section 2", async () => {
+            await expect(this.section2Field).toBeVisible();
+            await this.section2Field.fill("Roshan Sanjay Ghadge");
+            await expect(this.section2SubmitButton).toBeEnabled();
+            await this.section2SubmitButton.click();
+        });
+
+        await test.step("Working with the section 3", async () => {
+            await expect(this.section3Field).toBeVisible();
+            await this.section3Field.fill("Ghadge");
+            await expect(this.section3SubmitButton).toBeEnabled();
+            await this.section3SubmitButton.click();
+        });
+
+        footerSectionTitle = (await this.footerSection.textContent())!.trim();
+        console.log('Footer Section Title :', footerSectionTitle);
+        countOfLinks = await this.footerSectionLink.count();
+
+        for (let i = 0; i < countOfLinks; i++) {
+            let label = await this.footerSectionLink.nth(i).textContent();
+            let URL = (await this.footerSectionLink.nth(i).getAttribute('href'))!;
+            console.log(`Footer Section ${label} and ${URL}`);
+            let response = await this.page.request.get(URL);
+            let status = await response.status();
+            console.log(` Status of link ${status}`)
+        }
+
+
         console.info('--- Test Ended ---');
         console.timeEnd('-- Total Execution Time ---');
     }
