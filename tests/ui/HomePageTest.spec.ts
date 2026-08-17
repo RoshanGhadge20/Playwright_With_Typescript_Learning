@@ -123,4 +123,8 @@ test.describe("All HomePage Interaction Individual Tests", () => {
         await homePage.workingWithVisitorsSection();
     });
 
+    test("Working with form section", async ({ homePage }) => {
+        await homePage.workingWithFormSection();
+    })
+
 });
