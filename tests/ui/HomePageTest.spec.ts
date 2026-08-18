@@ -126,5 +126,8 @@ test.describe("All HomePage Interaction Individual Tests", () => {
     test("Working with form section", async ({ homePage }) => {
         await homePage.workingWithFormSection();
     })
+    test("Working with shadow DOM section", async ({ homePage }) => {
+        await homePage.workingWithShadowDOM();
+    })
 
 });

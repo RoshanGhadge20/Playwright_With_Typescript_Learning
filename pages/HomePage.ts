@@ -1,4 +1,5 @@
 import { Page, test, expect, Locator, BrowserContext, Request, APIResponse } from '@playwright/test'
+import path from "path";
 import { BasePage } from '../pages/BasePage';
 import { validationMessage, roles } from '../config/enum';
 import { Footer } from './components/Footer';
@@ -134,6 +135,17 @@ export class HomePage extends BasePage {
     private readonly footerSection: Locator;
     private readonly footerSectionLink: Locator;
 
+    // Shadow DOM Section 
+    private readonly shadowDOM: Locator;
+    private readonly shadowDOM_MobileLabel: Locator;
+    private readonly shadowDOM_LaptopLabel: Locator;
+    private readonly shadowDOM_Blogs: Locator;
+    private readonly shadowHost: Locator;
+    private readonly shadowDOMInputField: Locator;
+    private readonly shadowHostCheckBoxInput: Locator;
+    private readonly shadowHostFileInput: Locator;
+    private readonly shadowDOMYoutubeLink: Locator;
+
 
 
     constructor(page: Page) {
@@ -267,6 +279,17 @@ export class HomePage extends BasePage {
         this.footerSection = this.page.locator('#PageList1');
         this.footerSectionLink = this.page.locator('div#PageList1 div.widget-content  ul li a');
 
+        // Shadow DOM 
+        this.shadowDOM = this.page.locator("div#HTML16 h2");
+        this.shadowDOM_MobileLabel = this.page.locator("span#shadow_content span");
+        this.shadowDOM_LaptopLabel = this.page.locator("div#nested_shadow_content div");
+        this.shadowDOM_Blogs = this.page.locator('#shadow_host').getByRole('link', { name: 'Blog' });
+        this.shadowHost = page.locator('#shadow_host');
+        this.shadowDOMInputField = this.shadowHost.locator("input[type='text']");
+        this.shadowHostCheckBoxInput = this.shadowHost.locator("input[type ='checkbox']");
+        this.shadowHostFileInput = this.shadowHost.locator("input[type='file']");
+        // this.shadowDOMYoutubeLink = this.page.locator('#shadow_host').getByRole('link', { name: 'Youtube' })
+        this.shadowDOMYoutubeLink = this.page.getByText('Youtube');
     }
 
 
@@ -1006,12 +1029,55 @@ export class HomePage extends BasePage {
             let status = await response.status();
             console.log(` Status of link ${status}`)
         }
-
-
         console.info('--- Test Ended ---');
         console.timeEnd('-- Total Execution Time ---');
     }
 
+
+    async workingWithShadowDOM(): Promise<void> {
+        console.info(`--- Test started ---- `);
+        console.time('-- Total Execution Time ---');
+
+        let sectionTitle: string;
+        let mobileLabel: string;
+        let laptopLabel: string;
+        let url: string | null;
+        let youtubeLink: string | null;
+
+
+        sectionTitle = (await this.shadowDOM.textContent())!.trim();
+        console.log(`Shadow DOM Title :- ${sectionTitle}`);
+        mobileLabel = (await this.shadowDOM_MobileLabel.textContent())!.trim();
+        laptopLabel = (await this.shadowDOM_LaptopLabel.textContent())!.trim();
+        console.log(`Mobile and Laptop Label are :- ${mobileLabel} and ${laptopLabel}`);
+        url = await this.shadowDOM_Blogs.getAttribute('href');
+        if (url) {
+            const response = await this.page.request.get(url);
+            console.log(`Requested Blog page response status is :- ${response.status()}`);
+        }
+        else {
+            console.info(`Not able to fetch the URL`);
+        }
+        // await expect(this.shadowDOMInputField).toBeVisible();
+        await this.shadowDOMInputField.fill("Roshan Ghadge");
+        // await expect(this.shadowHostCheckBoxInput).toBeVisible();
+        await this.shadowHostCheckBoxInput.click();
+        // await expect(this.shadowHostFileInput).toBeEnabled();
+        let sampleFilePath = path.join(process.cwd(), "test-data", "sampleTest.pdf");
+        await this.shadowHostFileInput.setInputFiles(sampleFilePath);
+
+        youtubeLink = await this.shadowDOMYoutubeLink.getAttribute('href');
+        if (youtubeLink) {
+            const response = await this.page.request.get(youtubeLink);
+            console.log(`Requested Youtube page response status is :- ${response.status()}`);
+        }
+        else {
+            console.info(`Not able to fetch the URL`);
+        }
+
+        console.info('--- Test Ended ---');
+        console.timeEnd('-- Total Execution Time ---');
+    }
 
 }
 
