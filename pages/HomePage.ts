@@ -1044,36 +1044,55 @@ export class HomePage extends BasePage {
         let url: string | null;
         let youtubeLink: string | null;
 
+        await test.step("Fetching the section title and printing it", async () => {
+            sectionTitle = (await this.shadowDOM.textContent())!.trim();
+            console.log(`Shadow DOM Title :- ${sectionTitle}`);
+        });
 
-        sectionTitle = (await this.shadowDOM.textContent())!.trim();
-        console.log(`Shadow DOM Title :- ${sectionTitle}`);
-        mobileLabel = (await this.shadowDOM_MobileLabel.textContent())!.trim();
-        laptopLabel = (await this.shadowDOM_LaptopLabel.textContent())!.trim();
-        console.log(`Mobile and Laptop Label are :- ${mobileLabel} and ${laptopLabel}`);
-        url = await this.shadowDOM_Blogs.getAttribute('href');
-        if (url) {
-            const response = await this.page.request.get(url);
-            console.log(`Requested Blog page response status is :- ${response.status()}`);
-        }
-        else {
-            console.info(`Not able to fetch the URL`);
-        }
-        // await expect(this.shadowDOMInputField).toBeVisible();
-        await this.shadowDOMInputField.fill("Roshan Ghadge");
-        // await expect(this.shadowHostCheckBoxInput).toBeVisible();
-        await this.shadowHostCheckBoxInput.click();
-        // await expect(this.shadowHostFileInput).toBeEnabled();
-        let sampleFilePath = path.join(process.cwd(), "test-data", "sampleTest.pdf");
-        await this.shadowHostFileInput.setInputFiles(sampleFilePath);
+        await test.step("Fetching the mobile and laptop labels and printing it", async () => {
+            mobileLabel = (await this.shadowDOM_MobileLabel.textContent())!.trim();
+            laptopLabel = (await this.shadowDOM_LaptopLabel.textContent())!.trim();
+            console.log(`Mobile and Laptop Label are :- ${mobileLabel} and ${laptopLabel}`);
+        });
 
-        youtubeLink = await this.shadowDOMYoutubeLink.getAttribute('href');
-        if (youtubeLink) {
-            const response = await this.page.request.get(youtubeLink);
-            console.log(`Requested Youtube page response status is :- ${response.status()}`);
-        }
-        else {
-            console.info(`Not able to fetch the URL`);
-        }
+        await test.step("Fetching the url and printing the response status", async () => {
+            url = await this.shadowDOM_Blogs.getAttribute('href');
+            if (url) {
+                const response = await this.page.request.get(url);
+                console.log(`Requested Blog page response status is :- ${response.status()}`);
+            }
+            else {
+                console.info(`Not able to fetch the URL`);
+            }
+        });
+
+        await test.step("Filling the details into the shadowDOM Field", async () => {
+            // await expect(this.shadowDOMInputField).toBeVisible();
+            await this.shadowDOMInputField.fill("Roshan Ghadge");
+        });
+
+        await test.step("Clicking the checkbox and validating that it checked", async () => {
+            // await expect(this.shadowHostCheckBoxInput).toBeVisible();
+            await this.shadowHostCheckBoxInput.click();
+            await expect(this.shadowHostCheckBoxInput).toBeChecked();
+        });
+
+        await test.step("Uploading the file through the file Input", async () => {
+            // await expect(this.shadowHostFileInput).toBeEnabled();
+            let sampleFilePath = path.join(process.cwd(), "test-data", "sampleTest.pdf");
+            await this.shadowHostFileInput.setInputFiles(sampleFilePath);
+        });
+
+        await test.step("Fetching the youtube link and validation its response status", async () => {
+            youtubeLink = await this.shadowDOMYoutubeLink.getAttribute('href');
+            if (youtubeLink) {
+                const response = await this.page.request.get(youtubeLink);
+                console.log(`Requested Youtube page response status is :- ${response.status()}`);
+            }
+            else {
+                console.info(`Not able to fetch the URL`);
+            }
+        });
 
         console.info('--- Test Ended ---');
         console.timeEnd('-- Total Execution Time ---');
