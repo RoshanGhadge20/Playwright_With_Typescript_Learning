@@ -1,15 +1,9 @@
 import { Page, test, expect, Locator, BrowserContext, Request, APIResponse } from '@playwright/test'
 import path from "path";
 import { BasePage } from '../pages/BasePage';
-import { validationMessage, roles } from '../config/enum';
 import { Footer } from './components/Footer';
-import { execPath } from 'node:process';
-import { request } from 'node:http';
-import { URL, Url } from 'node:url';
-import { asyncWrapProviders } from 'node:async_hooks';
 import * as allure from "allure-js-commons";
 import { ContentType } from "allure-js-commons";
-import { url } from 'node:inspector';
 
 export class HomePage extends BasePage {
 
@@ -288,7 +282,6 @@ export class HomePage extends BasePage {
         this.shadowDOMInputField = this.shadowHost.locator("input[type='text']");
         this.shadowHostCheckBoxInput = this.shadowHost.locator("input[type ='checkbox']");
         this.shadowHostFileInput = this.shadowHost.locator("input[type='file']");
-        // this.shadowDOMYoutubeLink = this.page.locator('#shadow_host').getByRole('link', { name: 'Youtube' })
         this.shadowDOMYoutubeLink = this.page.getByText('Youtube');
     }
 
@@ -1067,18 +1060,15 @@ export class HomePage extends BasePage {
         });
 
         await test.step("Filling the details into the shadowDOM Field", async () => {
-            // await expect(this.shadowDOMInputField).toBeVisible();
             await this.shadowDOMInputField.fill("Roshan Ghadge");
         });
 
         await test.step("Clicking the checkbox and validating that it checked", async () => {
-            // await expect(this.shadowHostCheckBoxInput).toBeVisible();
             await this.shadowHostCheckBoxInput.click();
             await expect(this.shadowHostCheckBoxInput).toBeChecked();
         });
 
         await test.step("Uploading the file through the file Input", async () => {
-            // await expect(this.shadowHostFileInput).toBeEnabled();
             let sampleFilePath = path.join(process.cwd(), "test-data", "sampleTest.pdf");
             await this.shadowHostFileInput.setInputFiles(sampleFilePath);
         });
