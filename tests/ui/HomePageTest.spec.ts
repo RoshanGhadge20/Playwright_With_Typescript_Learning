@@ -1,5 +1,4 @@
 import { test } from './../../fixtures/page.fixture'
-import { LoginPage, HomePage } from '../../pages';
 import * as allure from "allure-js-commons";
 
 
