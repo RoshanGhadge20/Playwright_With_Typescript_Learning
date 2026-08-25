@@ -11,3 +11,10 @@ export const roles =
     PARTNER: 'partner',
     OPERATION: 'operation'
 }
+
+export const status =
+{
+    PASSED: 'pass',
+    FAILED: 'failed',
+    PENDING: 'pending'
+}

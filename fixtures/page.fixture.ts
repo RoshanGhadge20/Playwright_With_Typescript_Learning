@@ -4,10 +4,12 @@ import { BasePage } from '../pages/BasePage';
 import { HomePage } from '../pages/HomePage';
 import { ENV } from '../config/envHelper';
 import { parseEnv } from 'node:util';
+import { PlaywrightPage } from '../pages/playwrightPage';
 
 type pageFixture = {
     loginPage: LoginPage;
     homePage: HomePage;
+    playwrightPage: PlaywrightPage;
 }
 
 export const test = base.extend<pageFixture>(
@@ -19,10 +21,17 @@ export const test = base.extend<pageFixture>(
             await page.close();
         },
 
-        // Home Page 
+        // Home Page
         homePage: async ({ page, request }, use) => {
             await page.goto(ENV.BASEURL_HOMEPAGE, { waitUntil: 'networkidle' });
             await use(new HomePage(page));
+            await page.close();
+        },
+
+        // Playwiright page
+        playwrightPage: async ({ page, request }, use) => {
+            await page.goto(ENV.BASEURL_PLAYWRIGHTPAGE, { waitUntil: 'networkidle' });
+            await use(new PlaywrightPage(page));
             await page.close();
         },
     }
