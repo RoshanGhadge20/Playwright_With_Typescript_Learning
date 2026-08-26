@@ -4,7 +4,7 @@ import { BasePage } from '../pages/BasePage';
 import { HomePage } from '../pages/HomePage';
 import { ENV } from '../config/envHelper';
 import { parseEnv } from 'node:util';
-import { PlaywrightPage } from '../pages/playwrightPage';
+import { PlaywrightPage } from '../pages/PlaywrightPage';
 
 type pageFixture = {
     loginPage: LoginPage;
