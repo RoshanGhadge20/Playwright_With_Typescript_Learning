@@ -3,6 +3,7 @@ import { BasePage } from "./BasePage";
 
 export class PlaywrightPage extends BasePage {
 
+    // Get by Role Elements
     private readonly primaryActionButton;
     private readonly toggleButton;
     private readonly divButtonRole;
@@ -11,6 +12,12 @@ export class PlaywrightPage extends BasePage {
     private readonly homeLink;
     private readonly productsLink;
     private readonly contactLink;
+
+    // Get by Text Elements
+    private readonly listItem1;
+    private readonly listItem1WithLink;
+    private readonly specialUniqueTextIdentifier;
+
 
     constructor(page: Page) {
         super(page);
@@ -25,6 +32,13 @@ export class PlaywrightPage extends BasePage {
         this.homeLink = this.page.locator('#role-locators').getByRole('link', { name: 'Home' });
         this.productsLink = this.page.locator('#role-locators').getByRole('link', { name: 'Products' });
         this.contactLink = this.page.locator('#role-locators').getByRole('link', { name: 'Contact' });
+
+        // Get by text elements
+        this.listItem1 = this.page.getByText("List item 1");
+        this.listItem1WithLink = this.page.getByText('List item 2 with');
+        this.specialUniqueTextIdentifier = this.page.getByText('Special: Unique text identifier');
+
+
     }
 
 
@@ -49,5 +63,12 @@ export class PlaywrightPage extends BasePage {
         await expect(this.contactLink).toBeVisible();
         await this.contactLink.click();
         await this.page.goBack();
+    }
+
+    async testgetByText() {
+        await this.page.waitForLoadState('networkidle');
+        await expect(this.listItem1).toBeVisible();
+        await expect(this.listItem1WithLink).toBeVisible();
+        await expect(this.specialUniqueTextIdentifier).toBeVisible();
     }
 }

@@ -8,5 +8,9 @@ test.describe('Working on playwright page', async () => {
 
     test("Working with playwright getByRole Locators", async ({ playwrightPage }) => {
         playwrightPage.testgetByRole();
+    });
+
+    test("Working with playwright getByText Locators", async ({ playwrightPage }) => {
+        playwrightPage.testgetByText();
     })
 });
