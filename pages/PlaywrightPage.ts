@@ -17,6 +17,16 @@ export class PlaywrightPage extends BasePage {
     private readonly listItem1;
     private readonly listItem1WithLink;
     private readonly specialUniqueTextIdentifier;
+    private readonly submitFormButton;
+
+
+    // Get by label
+    private readonly emailAddressField;
+    private readonly passwordField;
+    private readonly yourAgeField;
+    private readonly standardRadioButton;
+    private readonly ExpressRadioButton;
+
 
 
     constructor(page: Page) {
@@ -37,7 +47,14 @@ export class PlaywrightPage extends BasePage {
         this.listItem1 = this.page.getByText("List item 1");
         this.listItem1WithLink = this.page.getByText('List item 2 with');
         this.specialUniqueTextIdentifier = this.page.getByText('Special: Unique text identifier');
+        this.submitFormButton = this.page.getByText('Submit Form');
 
+        // Get by label 
+        this.emailAddressField = this.page.getByLabel('Email Address:');
+        this.passwordField = this.page.getByLabel('Password:');
+        this.yourAgeField = this.page.getByLabel('Your Age:');
+        this.standardRadioButton = this.page.getByLabel(' Standard');
+        this.ExpressRadioButton = this.page.getByLabel(' Express');
 
     }
 
@@ -70,5 +87,15 @@ export class PlaywrightPage extends BasePage {
         await expect(this.listItem1).toBeVisible();
         await expect(this.listItem1WithLink).toBeVisible();
         await expect(this.specialUniqueTextIdentifier).toBeVisible();
+        await expect(this.submitFormButton).toBeVisible();
+        await this.submitFormButton.click({ force: true });
+    }
+
+    async testgetByLabel() {
+        await this.emailAddressField.fill('Roshanghadge20@gmail.com');
+        await this.passwordField.fill('RoshanApp@20020');
+        await this.yourAgeField.fill('25');
+        await this.standardRadioButton.click();
+        await this.ExpressRadioButton.click();
     }
 }

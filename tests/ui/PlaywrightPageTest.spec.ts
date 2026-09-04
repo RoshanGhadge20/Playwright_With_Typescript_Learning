@@ -12,5 +12,10 @@ test.describe('Working on playwright page', async () => {
 
     test("Working with playwright getByText Locators", async ({ playwrightPage }) => {
         playwrightPage.testgetByText();
-    })
+    });
+
+    test("Working with playwright getByLabel Locators", async ({ playwrightPage }) => {
+        playwrightPage.testgetByLabel();
+    });
+
 });
