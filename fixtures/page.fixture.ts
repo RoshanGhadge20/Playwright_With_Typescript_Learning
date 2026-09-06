@@ -5,11 +5,13 @@ import { HomePage } from '../pages/HomePage';
 import { ENV } from '../config/envHelper';
 import { parseEnv } from 'node:util';
 import { PlaywrightPage } from '../pages/PlaywrightPage';
+import { PracticeAllModules } from '../pages';
 
 type pageFixture = {
     loginPage: LoginPage;
     homePage: HomePage;
     playwrightPage: PlaywrightPage;
+    practiceAllModules: PracticeAllModules
 }
 
 export const test = base.extend<pageFixture>(
@@ -34,5 +36,13 @@ export const test = base.extend<pageFixture>(
             await use(new PlaywrightPage(page));
             await page.close();
         },
+
+        // Practice All Modules
+        practiceAllModules: async ({ page }, use) => {
+            await page.goto(ENV.BASEURL_HOMEPAGE, { waitUntil: 'networkidle' });
+            await use(new PracticeAllModules(page));
+            await page.close();
+        }
     }
+
 )
