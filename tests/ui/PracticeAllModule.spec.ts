@@ -24,4 +24,5 @@ test.describe("Practicing all individual of modules in playwright", async () => 
     test("Practicing the download section", async ({ practiceAllModules }) => {
         await practiceAllModules.handlingDownloadSection();
     });
+
 });
