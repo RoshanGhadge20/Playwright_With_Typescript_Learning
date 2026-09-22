@@ -44,8 +44,4 @@ export abstract class BasePage {
         let numberOfElements = await locator.count();
         return numberOfElements;
     }
-
-
-
-
 }
