@@ -14,8 +14,6 @@ export class PracticeAllModules extends BasePage {
 
     private readonly downlaodSection;
 
-
-
     constructor(page: Page) {
         super(page);
         // this.page = page;

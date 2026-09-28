@@ -10,7 +10,6 @@ export class HomePage extends BasePage {
     // Reading the components
     readonly footer: Footer;
 
-
     // HomePage section 
     private readonly sections: Locator;
 
@@ -364,6 +363,7 @@ export class HomePage extends BasePage {
                 .map(option => option.trim());
             console.log(`All dropdown options are the - ${countryList}`);
             if (countryList.includes("India")) {
+                // Native dropdown Handling -> allows with the value, label, index 
                 await this.countryDropdown.selectOption({ value: 'india' });
                 console.log("India country is selected from the dropdown");
             }
@@ -724,7 +724,7 @@ export class HomePage extends BasePage {
 
         test.step("Now performing the double click on element:", async () => {
             console.log('Now performing the double click');
-            await this.doubleClickButton.dblclick();
+            await this.doubleClickButton.dblclick(); // Native method for performing the double click 
         });
 
         await test.step("Fetching the input value from the field2 again after double click:", async () => {
@@ -1064,7 +1064,8 @@ export class HomePage extends BasePage {
         });
 
         await test.step("Clicking the checkbox and validating that it checked", async () => {
-            await this.shadowHostCheckBoxInput.click();
+            // Default method is used as check/ uncheck instead of manual click operation 
+            await this.shadowHostCheckBoxInput.check();
             await expect(this.shadowHostCheckBoxInput).toBeChecked();
         });
 
